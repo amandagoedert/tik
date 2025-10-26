@@ -79,11 +79,21 @@ function onlyDigits(?string $value): string {
 function toCents($value): int {
     // Sempre converte para centavos, assumindo que o valor de entrada está em reais
     if (is_int($value) || is_float($value)) {
-        return (int) round($value * 100);
+        $cents = (int) round($value * 100);
+        logGateway(['etapa' => 'toCents_debug', 'input' => $value, 'type' => gettype($value), 'output' => $cents]);
+        return $cents;
     }
-    $value = str_replace(['.', ','], ['', '.'], (string) $value);
-    $floatValue = (float) $value;
-    return (int) round($floatValue * 100);
+    
+    // Para strings, trata vírgula como separador decimal brasileiro
+    $valueStr = (string) $value;
+    // Remove pontos (separadores de milhares) e substitui vírgula por ponto
+    $valueStr = str_replace('.', '', $valueStr); // Remove pontos de milhares
+    $valueStr = str_replace(',', '.', $valueStr); // Vírgula vira ponto decimal
+    $floatValue = (float) $valueStr;
+    $cents = (int) round($floatValue * 100);
+    
+    logGateway(['etapa' => 'toCents_debug', 'input' => $value, 'string_processed' => $valueStr, 'float' => $floatValue, 'output' => $cents]);
+    return $cents;
 }
 
 function getQuantity(array $produto): int {
@@ -160,8 +170,15 @@ if (!empty($errors)) {
 }
 
 $amount = toCents($data['amount']);
+logGateway(['etapa' => 'amount_validation', 'original_amount' => $data['amount'], 'converted_amount' => $amount, 'min_required' => 500]);
+
 if ($amount <= 0) {
     respond(400, ['error' => true, 'message' => 'Valor da transação inválido.']);
+}
+
+// Verificar se atende valor mínimo do TriboPay (R$ 5,00 = 500 centavos)
+if ($amount < 500) {
+    respond(400, ['error' => true, 'message' => "Valor mínimo de R$ 5,00. Valor informado: R$ " . number_format($amount/100, 2, ',', '.')]);
 }
 
 $document = onlyDigits($data['debtor_document_number']);
@@ -224,7 +241,10 @@ foreach ($produtos as $produto) {
 
     $title = sanitizeString($produto['nome'] ?? $produto['title'] ?? $productConfig['title'] ?? 'Produto');
     $quantity = getQuantity($produto);
-    $price = toCents($produto['preco'] ?? $produto['price'] ?? 0);
+    $originalPrice = $produto['preco'] ?? $produto['price'] ?? 0;
+    $price = toCents($originalPrice);
+    
+    logGateway(['etapa' => 'cart_item_debug', 'title' => $title, 'original_price' => $originalPrice, 'price_cents' => $price, 'quantity' => $quantity]);
 
     if ($price <= 0) {
         $cartErrors[] = "Preço inválido para o item {$title}.";

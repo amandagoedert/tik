@@ -34,29 +34,22 @@ try {
         throw new Exception('Token da API não configurado');
     }
     
-    // URL da API TriboPay para consultar transação
-    $apiUrl = "https://api.tribopay.com.br/api/public/v1/transactions/status";
-
-    // Dados para consulta
-    $payload = [
-        'transaction_hash' => $transactionId,
-    ];
+    // URL da API TriboPay para consultar transação (usando GET com query parameter)
+    $apiUrl = "https://api.tribopay.com.br/api/public/v1/transactions/status?transaction_hash=" . urlencode($transactionId);
 
     logGateway([
-        'etapa' => 'verificacao_payload',
+        'etapa' => 'verificacao_request',
         'endpoint' => $apiUrl,
-        'payload' => $payload,
+        'method' => 'GET',
+        'transaction_hash' => $transactionId,
     ]);
 
     // Configurar cURL
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $apiUrl,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($payload),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
             'Accept: application/json',
             'Authorization: Bearer ' . $config['api_token'],
             'User-Agent: VictoriasSecret-Store/1.0',
