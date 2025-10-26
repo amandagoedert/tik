@@ -44,5 +44,5 @@ return [
      | URL de postback
      |--------------------------------------------------------------------------
      */
-    'postback_url' => 'https://cryptopaybrazil.netlify.app/checkout/webhook.php',
+    'postback_url' => 'https://tikt-ten.vercel.app/checkout/webhook.php',
 ];

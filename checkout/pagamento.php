@@ -367,7 +367,7 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
         if (data.status === "pago") {
           document.getElementById("statusPagamento").innerText = "✅ Pagamento Confirmado!";
           setTimeout(() => {
-            window.location.href = "https://cryptopaybrazil.netlift.app/up1"; // redireciona para upsell
+            window.location.href = "https://tikt-ten.vercel.app/up1"; // redireciona para upsell
           }, 2000);
         }
       } catch (e) {

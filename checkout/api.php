@@ -7,7 +7,35 @@ const TRIBOPAY_ENDPOINT = 'https://api.tribopay.com.br/v1/transaction';
 
 function respond(int $status, array $payload): void {
     http_response_code($status);
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+
+    $options = JSON_UNESCAPED_UNICODE;
+    if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+        $options |= JSON_INVALID_UTF8_SUBSTITUTE;
+    }
+
+    $json = json_encode($payload, $options);
+    if ($json === false) {
+        $errorMessage = json_last_error_msg();
+        logGateway([
+            'etapa' => 'json_encode_erro',
+            'status' => $status,
+            'erro' => $errorMessage,
+            'payload_keys' => array_keys($payload),
+        ]);
+
+        $fallbackPayload = [
+            'error' => true,
+            'message' => 'Erro interno ao gerar resposta JSON.',
+            'details' => $errorMessage,
+        ];
+
+        $fallback = json_encode($fallbackPayload, $options);
+
+        echo $fallback === false ? '{"error":true,"message":"Erro inesperado ao gerar resposta."}' : $fallback;
+        exit;
+    }
+
+    echo $json;
     exit;
 }
 
@@ -60,6 +88,14 @@ function extractFirstAvailable(array $source, array $paths) {
 }
 
 $rawBody = file_get_contents('php://input');
+$contentType = $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? null;
+
+logGateway([
+    'etapa' => 'raw_request',
+    'length' => is_string($rawBody) ? strlen($rawBody) : 0,
+    'content_type' => $contentType,
+]);
+
 $data = json_decode($rawBody, true);
 
 logGateway(['etapa' => 'input', 'payload' => $data]);
