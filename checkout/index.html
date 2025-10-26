@@ -832,7 +832,9 @@
 
       if (qrCodeImage || pixPayload) {
         const transactionHash = data.hash || `${Date.now()}`;
-        const params = new URLSearchParams({
+        
+        // Exibir popup com PIX em vez de redirecionar
+        mostrarPopupPix({
           transacao: transactionHash,
           nome: nome,
           email: email,
@@ -840,11 +842,18 @@
           hash: transactionHash,
           pix: pixPayload || '',
           qrcode: qrCodeImage || '',
-          item: "Vários produtos do carrinho",
+          valor: amountFormatted.replace(".", ","),
+          produtos: produtos,
+          dadosCompletos: data
+        });
+        
+        // Iniciar verificação de pagamento
+        iniciarVerificacaoPagamento(transactionHash, {
+          nome, email, telefone, 
           valor: amountFormatted.replace(".", ","),
           produtos: JSON.stringify(produtos)
         });
-        window.location.href = "pagamento.php?" + params.toString();
+        
       } else {
         throw new Error(data.message || 'Não foi possível obter os dados do PIX.');
       }
@@ -859,7 +868,400 @@
     startCheckoutCountdown();
     loadCheckout();
   });
+
+  // ===== FUNÇÕES DO POPUP PIX =====
+  function mostrarPopupPix(dados) {
+    const popup = document.getElementById('popup-pix');
+    const overlay = document.getElementById('popup-overlay');
+    
+    // Preencher dados do popup
+    document.getElementById('pix-transacao').textContent = dados.transacao;
+    document.getElementById('pix-nome').textContent = dados.nome;
+    document.getElementById('pix-valor').textContent = `R$ ${dados.valor}`;
+    
+    // QR Code
+    const qrContainer = document.getElementById('pix-qrcode');
+    if (dados.pix) {
+      qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.pix)}" alt="QR Code PIX" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">`;
+    } else {
+      qrContainer.innerHTML = '<p style="color:#999;">QR Code não disponível</p>';
+    }
+    
+    // Código PIX
+    const pixInput = document.getElementById('pix-codigo');
+    if (dados.pix) {
+      pixInput.value = dados.pix;
+      pixInput.style.display = 'block';
+      document.getElementById('pix-copiar').style.display = 'inline-block';
+    } else {
+      pixInput.style.display = 'none';
+      document.getElementById('pix-copiar').style.display = 'none';
+    }
+    
+    // Mostrar popup
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+      overlay.classList.add('show');
+    }, 10);
+  }
+
+  function fecharPopupPix() {
+    const overlay = document.getElementById('popup-overlay');
+    overlay.classList.remove('show');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 300);
+  }
+
+  async function copiarCodigoPix() {
+    const input = document.getElementById('pix-codigo');
+    const botao = document.getElementById('pix-copiar');
+    
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(input.value);
+      } else {
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+      }
+      
+      const textoOriginal = botao.textContent;
+      botao.textContent = "✅ Copiado!";
+      botao.style.background = "#28a745";
+      
+      setTimeout(() => {
+        botao.textContent = textoOriginal;
+        botao.style.background = "";
+      }, 2000);
+      
+      mostrarNotificacao("Código PIX copiado com sucesso!", "success");
+      
+    } catch (err) {
+      mostrarNotificacao("Erro ao copiar. Selecione o texto manualmente.", "error");
+    }
+  }
+
+  function mostrarNotificacao(mensagem, tipo) {
+    const notificacao = document.createElement('div');
+    notificacao.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      z-index: 10001;
+      animation: slideIn 0.3s ease-out;
+      ${tipo === 'success' ? 'background: #28a745;' : 'background: #dc3545;'}
+    `;
+    notificacao.textContent = mensagem;
+    
+    document.body.appendChild(notificacao);
+    
+    setTimeout(() => {
+      notificacao.remove();
+    }, 3000);
+  }
+
+  function iniciarVerificacaoPagamento(transacaoId, dadosCliente) {
+    let tentativas = 0;
+    const maxTentativas = 120; // 10 minutos (5s * 120 = 600s)
+    
+    const verificar = setInterval(async () => {
+      tentativas++;
+      
+      try {
+        const verificaUrl = buildApiUrl(`verifica.php?id=${encodeURIComponent(transacaoId)}`);
+        const response = await fetch(verificaUrl);
+        const data = await response.json();
+        
+        console.log(`Verificação ${tentativas}:`, data);
+        
+        if (data.status === "pago" || data.success === true) {
+          clearInterval(verificar);
+          
+          // Atualizar status no popup
+          document.getElementById('pix-status').innerHTML = '✅ <strong>Pagamento Confirmado!</strong>';
+          document.getElementById('pix-status').style.background = '#d4edda';
+          document.getElementById('pix-status').style.color = '#155724';
+          
+          // Aguardar 3 segundos e redirecionar
+          setTimeout(() => {
+            fecharPopupPix();
+            
+            // Redirecionar para página de sucesso
+            const params = new URLSearchParams({
+              transacao: transacaoId,
+              ...dadosCliente
+            });
+            window.location.href = `pagamento.php?${params.toString()}`;
+          }, 3000);
+          
+        } else if (tentativas >= maxTentativas) {
+          clearInterval(verificar);
+          document.getElementById('pix-status').innerHTML = '⏰ Tempo limite atingido. Recarregue a página para tentar novamente.';
+          document.getElementById('pix-status').style.background = '#fff3cd';
+          document.getElementById('pix-status').style.color = '#856404';
+        }
+        
+      } catch (error) {
+        console.error('Erro na verificação:', error);
+        if (tentativas >= maxTentativas) {
+          clearInterval(verificar);
+        }
+      }
+    }, 5000); // Verificar a cada 5 segundos
+  }
+
 </script>
+
+<!-- Popup Modal PIX -->
+<div id="popup-overlay" class="popup-overlay">
+  <div id="popup-pix" class="popup-pix">
+    <div class="popup-header">
+      <h2>💳 Pagamento PIX</h2>
+      <button class="popup-close" onclick="fecharPopupPix()">×</button>
+    </div>
+    
+    <div class="popup-content">
+      <div class="pix-info">
+        <p><strong>Transação:</strong> <span id="pix-transacao"></span></p>
+        <p><strong>Cliente:</strong> <span id="pix-nome"></span></p>
+        <p><strong>Valor:</strong> <span id="pix-valor" style="color: #f53d5c; font-size: 1.2em;"></span></p>
+      </div>
+      
+      <div class="pix-status" id="pix-status">
+        ⏳ Aguardando pagamento...
+      </div>
+      
+      <div class="pix-instructions">
+        <h3>📱 Como pagar:</h3>
+        <ol>
+          <li>Escaneie o QR Code <strong>OU</strong> copie o código</li>
+          <li>Abra o app do seu banco</li>
+          <li>Vá em <strong>PIX → Pagar</strong></li>
+          <li>Confirme o pagamento</li>
+        </ol>
+      </div>
+      
+      <div class="pix-qrcode-container">
+        <div id="pix-qrcode" class="pix-qrcode"></div>
+      </div>
+      
+      <div class="pix-codigo-container">
+        <label>Código PIX (Copia e Cola):</label>
+        <div class="pix-input-group">
+          <input type="text" id="pix-codigo" class="pix-codigo-input" readonly>
+          <button id="pix-copiar" class="pix-copiar-btn" onclick="copiarCodigoPix()">📋 Copiar</button>
+        </div>
+      </div>
+      
+      <div class="popup-footer">
+        <small>✅ O pagamento será confirmado automaticamente</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .popup-overlay.show {
+    opacity: 1;
+  }
+  
+  .popup-pix {
+    background: white;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+  }
+  
+  .popup-overlay.show .popup-pix {
+    transform: scale(1);
+  }
+  
+  .popup-header {
+    background: linear-gradient(135deg, #f53d5c, #e02d49);
+    color: white;
+    padding: 20px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .popup-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+  }
+  
+  .popup-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .popup-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .popup-content {
+    padding: 20px;
+  }
+  
+  .pix-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .pix-info p {
+    margin: 5px 0;
+  }
+  
+  .pix-status {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .pix-instructions {
+    background: #e7f3ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #007bff;
+  }
+  
+  .pix-instructions h3 {
+    margin: 0 0 10px 0;
+    color: #007bff;
+  }
+  
+  .pix-instructions ol {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .pix-qrcode-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .pix-qrcode {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px dashed #f53d5c;
+    display: inline-block;
+  }
+  
+  .pix-codigo-container {
+    margin: 20px 0;
+  }
+  
+  .pix-codigo-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+  }
+  
+  .pix-input-group {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pix-codigo-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-right: none;
+    font-family: monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    color: #495057;
+  }
+  
+  .pix-copiar-btn {
+    padding: 12px 16px;
+    background: #f53d5c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+  }
+  
+  .pix-copiar-btn:hover {
+    background: #e02d49;
+  }
+  
+  .popup-footer {
+    text-align: center;
+    color: #6c757d;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+  }
+  
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  @media (max-width: 600px) {
+    .popup-pix {
+      width: 95%;
+      margin: 10px;
+    }
+    
+    .popup-content {
+      padding: 15px;
+    }
+    
+    .pix-codigo-input {
+      font-size: 10px;
+    }
+  }
+</style>
 
 </body>
 </html>
