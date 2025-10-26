@@ -971,6 +971,10 @@
         console.error("❌ Servidor não retornou nenhum dado");
         if (response.status === 0) {
           throw new Error("Erro de conexão: Verifique sua internet ou se o servidor está ativo.");
+        } else if (response.status === 405) {
+          throw new Error("Erro 405: API não aceita POST. Verifique se o arquivo api.php existe no servidor.");
+        } else if (response.status === 404) {
+          throw new Error("Erro 404: Arquivo api.php não encontrado no servidor.");
         } else if (response.status >= 500) {
           throw new Error(`Erro do servidor (${response.status}): Tente novamente em alguns minutos.`);
         } else {

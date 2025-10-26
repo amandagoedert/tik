@@ -1,0 +1,39 @@
+# Configurações para API TriboPay
+RewriteEngine On
+
+# Permitir requisições POST para arquivos PHP
+<Files "*.php">
+    SetHandler application/x-httpd-php
+    Options +ExecCGI
+</Files>
+
+# Headers CORS para desenvolvimento
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Origin"
+Header always set Access-Control-Max-Age "86400"
+
+# Responder a requisições OPTIONS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=204,L]
+
+# Garantir que arquivos PHP sejam processados corretamente
+AddType application/x-httpd-php .php
+
+# Permitir override de configurações
+AllowOverride All
+
+# Configurações específicas para Vercel
+<IfModule mod_headers.c>
+    # Permitir execução de PHP
+    SetEnv PHP_HANDLER php-cgi
+    
+    # Headers de segurança
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Log de erros para debug
+php_flag log_errors on
+php_value error_log /tmp/php_errors.log

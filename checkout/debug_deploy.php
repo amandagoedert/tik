@@ -10,21 +10,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// Teste específico para método POST
+$methodTest = [
+    'current_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+    'post_allowed' => true,
+    'can_handle_post' => $_SERVER['REQUEST_METHOD'] === 'POST' ? 'YES' : 'Not tested (use POST request)',
+    'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown'
+];
+
 $debug = [
     'timestamp' => date('Y-m-d H:i:s'),
-    'method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+    'method_test' => $methodTest,
     'php_version' => PHP_VERSION,
     'environment' => [
         'HTTP_HOST' => $_SERVER['HTTP_HOST'] ?? 'unknown',
         'SERVER_NAME' => $_SERVER['SERVER_NAME'] ?? 'unknown',
         'REQUEST_URI' => $_SERVER['REQUEST_URI'] ?? 'unknown',
         'HTTP_ORIGIN' => $_SERVER['HTTP_ORIGIN'] ?? 'unknown',
-        'CONTENT_TYPE' => $_SERVER['CONTENT_TYPE'] ?? 'unknown'
+        'CONTENT_TYPE' => $_SERVER['CONTENT_TYPE'] ?? 'unknown',
+        'SERVER_SOFTWARE' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown'
     ],
     'files_exist' => [
         'api.php' => file_exists(__DIR__ . '/api.php'),
         'tribopay_config.php' => file_exists(__DIR__ . '/tribopay_config.php'),
-        'tribopay_log.php' => file_exists(__DIR__ . '/tribopay_log.php')
+        'tribopay_log.php' => file_exists(__DIR__ . '/tribopay_log.php'),
+        '.htaccess' => file_exists(__DIR__ . '/.htaccess')
     ]
 ];
 
