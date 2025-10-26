@@ -1008,3 +1008,23 @@
 {"datetime":"2025-10-26 16:11:19","data":{"etapa":"verificacao_resposta_raw","status":405,"erro":"","response_preview":"{\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
 {"datetime":"2025-10-26 16:11:19","data":{"etapa":"verificacao_status","mensagem":"Erro HTTP 405 na consulta: {\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
 {"datetime":"2025-10-26 16:11:19","data":{"etapa":"verificacao_status","mensagem":"Erro na verificação: Erro na API (HTTP 405)"}}
+{"datetime":"2025-10-26 16:11:24","data":{"etapa":"verificacao_status","mensagem":"Verificando pagamento para transação: pmmeivwsco"}}
+{"datetime":"2025-10-26 16:11:24","data":{"etapa":"verificacao_payload","endpoint":"https:\/\/api.tribopay.com.br\/api\/public\/v1\/transactions\/status","payload":{"transaction_hash":"pmmeivwsco"}}}
+{"datetime":"2025-10-26 16:11:24","data":{"etapa":"verificacao_resposta_raw","status":405,"erro":"","response_preview":"{\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:24","data":{"etapa":"verificacao_status","mensagem":"Erro HTTP 405 na consulta: {\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:24","data":{"etapa":"verificacao_status","mensagem":"Erro na verificação: Erro na API (HTTP 405)"}}
+{"datetime":"2025-10-26 16:11:29","data":{"etapa":"verificacao_status","mensagem":"Verificando pagamento para transação: pmmeivwsco"}}
+{"datetime":"2025-10-26 16:11:29","data":{"etapa":"verificacao_payload","endpoint":"https:\/\/api.tribopay.com.br\/api\/public\/v1\/transactions\/status","payload":{"transaction_hash":"pmmeivwsco"}}}
+{"datetime":"2025-10-26 16:11:29","data":{"etapa":"verificacao_resposta_raw","status":405,"erro":"","response_preview":"{\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:29","data":{"etapa":"verificacao_status","mensagem":"Erro HTTP 405 na consulta: {\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:29","data":{"etapa":"verificacao_status","mensagem":"Erro na verificação: Erro na API (HTTP 405)"}}
+{"datetime":"2025-10-26 16:11:34","data":{"etapa":"verificacao_status","mensagem":"Verificando pagamento para transação: pmmeivwsco"}}
+{"datetime":"2025-10-26 16:11:34","data":{"etapa":"verificacao_payload","endpoint":"https:\/\/api.tribopay.com.br\/api\/public\/v1\/transactions\/status","payload":{"transaction_hash":"pmmeivwsco"}}}
+{"datetime":"2025-10-26 16:11:34","data":{"etapa":"verificacao_resposta_raw","status":405,"erro":"","response_preview":"{\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:34","data":{"etapa":"verificacao_status","mensagem":"Erro HTTP 405 na consulta: {\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:34","data":{"etapa":"verificacao_status","mensagem":"Erro na verificação: Erro na API (HTTP 405)"}}
+{"datetime":"2025-10-26 16:11:39","data":{"etapa":"verificacao_status","mensagem":"Verificando pagamento para transação: pmmeivwsco"}}
+{"datetime":"2025-10-26 16:11:39","data":{"etapa":"verificacao_payload","endpoint":"https:\/\/api.tribopay.com.br\/api\/public\/v1\/transactions\/status","payload":{"transaction_hash":"pmmeivwsco"}}}
+{"datetime":"2025-10-26 16:11:39","data":{"etapa":"verificacao_resposta_raw","status":405,"erro":"","response_preview":"{\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:39","data":{"etapa":"verificacao_status","mensagem":"Erro HTTP 405 na consulta: {\n    \"message\": \"The POST method is not supported for route public\/v1\/transactions\/status. Supported methods: GET, HEAD.\"\n}"}}
+{"datetime":"2025-10-26 16:11:39","data":{"etapa":"verificacao_status","mensagem":"Erro na verificação: Erro na API (HTTP 405)"}}
