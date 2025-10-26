@@ -772,78 +772,88 @@
   const API_BASE_OVERRIDE = (window.CHECKOUT_API_BASE_URL || document.body?.dataset?.apiBase || '').trim();
 
   function buildApiUrl(path) {
+    const sanitizedPath = `${path}`.replace(/^\/+/, '');
+
     if (API_BASE_OVERRIDE) {
       try {
         const normalizedBase = API_BASE_OVERRIDE.endsWith('/') ? API_BASE_OVERRIDE : API_BASE_OVERRIDE + '/';
-        return new URL(path, normalizedBase).toString();
+        return new URL(sanitizedPath, normalizedBase).toString();
       } catch (err) {
         console.warn('API base override inválida:', API_BASE_OVERRIDE, err);
       }
     }
     
-    // Auto-detectar URL da API baseado na origem atual
     const currentOrigin = window.location.origin;
     const currentPath = window.location.pathname;
     
     console.log(`🔍 Detectando API URL:
       Origin: ${currentOrigin}
       Path: ${currentPath}
-      Target: ${path}
+      Target: ${sanitizedPath}
     `);
     
-    // Se estamos no desenvolvimento local
     if (currentOrigin.includes('127.0.0.1:5500') || currentOrigin.includes('localhost:5500')) {
-      const apiUrl = `${currentOrigin}/checkout/${path}`;
+      const apiUrl = `${currentOrigin}/checkout/${sanitizedPath}`;
       console.log(`🔗 API URL (Local): ${apiUrl}`);
       return apiUrl;
     }
     
-    // Se estamos no Vercel/produção, tentar múltiplas rotas
     if (currentOrigin.includes('vercel.app') || currentOrigin.includes('tikt-ten.vercel.app')) {
-      // Primeira opção: rota direta para checkout
-      const apiUrl = `${currentOrigin}/checkout/${path}`;
-      console.log(`🔗 API URL (Vercel - primary): ${apiUrl}`);
+      const apiUrl = `${currentOrigin}/api/${sanitizedPath}`;
+      console.log(`🔗 API URL (Vercel): ${apiUrl}`);
       return apiUrl;
     }
     
-    // Fallback: construir URL relativa à pasta checkout
     const apiUrl = currentPath.includes('/checkout/') 
-      ? `${currentOrigin}${currentPath.replace(/\/[^/]*$/, '')}/${path}`
-      : `${currentOrigin}/checkout/${path}`;
+      ? `${currentOrigin}${currentPath.replace(/\/[^/]*$/, '')}/${sanitizedPath}`
+      : `${currentOrigin}/checkout/${sanitizedPath}`;
     
     console.log(`🔗 API URL (Fallback): ${apiUrl}`);
     return apiUrl;
   }
 
-  // Função auxiliar para tentar múltiplas URLs da API
-  async function tryApiRequest(path, options) {
-    const urls = [
-      buildApiUrl(path),  // Rota principal
-      `${window.location.origin}/api/checkout.php`, // Rota alternativa para Vercel
-      `${window.location.origin}/checkout/${path}` // Rota direta
-    ];
-    
+  async function tryApiRequest(path, options = {}) {
+    const sanitizedPath = `${path}`.replace(/^\/+/, '');
+    const urls = [];
+
+    const pushUrl = (candidate) => {
+      if (!candidate || urls.includes(candidate)) {
+        return;
+      }
+      urls.push(candidate);
+    };
+
+    pushUrl(buildApiUrl(sanitizedPath));
+    pushUrl(`${window.location.origin}/api/${sanitizedPath}`);
+    pushUrl(`${window.location.origin}/checkout/${sanitizedPath}`);
+    pushUrl(`${window.location.origin}/${sanitizedPath}`);
+
     let lastError = null;
-    
+    let lastResponse = null;
+
     for (const url of urls) {
       try {
         console.log(`🔄 Tentando API URL: ${url}`);
         const response = await fetch(url, options);
-        
-        if (response.ok || response.status < 500) {
+
+        if (response.ok) {
           console.log(`✅ API URL funcionou: ${url}`);
           return response;
         }
-        
+
         console.warn(`⚠️ API URL retornou ${response.status}: ${url}`);
+        lastResponse = response;
         lastError = new Error(`HTTP ${response.status}`);
-        
       } catch (error) {
         console.warn(`❌ Erro na API URL ${url}:`, error.message);
         lastError = error;
       }
     }
-    
+
+    if (lastResponse) {
+      return lastResponse;
+    }
+
     throw lastError || new Error('Todas as rotas da API falharam');
   }
 
@@ -963,30 +973,32 @@
 
     try {
       persistCurrentCustomerInfo();
-      
+      const requestPayload = {
+        debtor_name: nome,
+        email: email,
+        debtor_document_number: cpf,
+        phone: telefone,
+        amount: amountValue,
+        produtos: produtos,
+        address_street: rua,
+        address_number: numero,
+        address_complement: complemento,
+        address_neighborhood: bairro,
+        address_city: cidade,
+        address_state: estado,
+        address_zipcode: cep,
+        payment_method: "pix"
+      };
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          debtor_name: nome,
-          email: email,
-          debtor_document_number: cpf,
-          phone: telefone,
-          amount: amountValue,
-          produtos: produtos,
-          address_street: rua,
-          address_number: numero,
-          address_complement: complemento,
-          address_neighborhood: bairro,
-          address_city: cidade,
-          address_state: estado,
-          address_zipcode: cep,
-          payment_method: "pix"
-        })
+        body: JSON.stringify(requestPayload)
       };
       
       console.log("🚀 Iniciando requisição para API TriboPay...");
       const response = await tryApiRequest("api.php", requestOptions);
+      const resolvedEndpoint = response.url || buildApiUrl("api.php");
+      console.log("Endpoint TriboPay API:", resolvedEndpoint);
 
       const contentType = response.headers.get("content-type") || "";
       const rawBody = await response.text();
@@ -996,12 +1008,11 @@
         Content-Type: ${contentType}
         Raw Body Length: ${rawBody?.length || 0}
         Raw Body Preview: ${rawBody?.substring(0, 200)}...
-        URL: ${apiEndpoint}
+        URL: ${resolvedEndpoint}
       `);
 
       let data = null;
-      
-      // Se não há resposta, verificar se é erro de rede ou servidor
+
       if (!rawBody || rawBody.length === 0) {
         console.error("❌ Servidor não retornou nenhum dado");
         if (response.status === 0) {
@@ -1016,8 +1027,7 @@
           throw new Error(`Gateway não retornou dados (Status: ${response.status}).`);
         }
       }
-      
-      // Tentar converter JSON
+
       if (contentType.includes("application/json") || rawBody.trim().startsWith('{')) {
         try {
           data = JSON.parse(rawBody);

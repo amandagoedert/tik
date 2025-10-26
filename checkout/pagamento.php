@@ -451,23 +451,39 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
     `;
     document.head.appendChild(style);
 
-    const DEFAULT_API_BASE = '/checkout/';
     const API_BASE_OVERRIDE = (window.CHECKOUT_API_BASE_URL || document.body?.dataset?.apiBase || '').trim();
 
     function buildApiUrl(path) {
-      const base = API_BASE_OVERRIDE !== '' ? API_BASE_OVERRIDE : DEFAULT_API_BASE;
-      const normalizedBase = base.endsWith('/') ? base : base + '/';
-      const sanitizedPath = path.replace(/^\/+/, '');
+      const sanitizedPath = `${path}`.replace(/^\/+/, '');
 
-      if (/^https?:\/\//i.test(normalizedBase)) {
-        return normalizedBase + sanitizedPath;
+      if (API_BASE_OVERRIDE !== '') {
+        try {
+          const normalizedBase = API_BASE_OVERRIDE.endsWith('/') ? API_BASE_OVERRIDE : API_BASE_OVERRIDE + '/';
+          return new URL(sanitizedPath, normalizedBase).toString();
+        } catch (err) {
+          console.warn('API base override inválida:', API_BASE_OVERRIDE, err);
+        }
       }
 
-      if (normalizedBase.startsWith('/')) {
-        return normalizedBase + sanitizedPath;
+      const origin = window.location.origin;
+
+      if (origin.includes('vercel.app') || origin.includes('tikt-ten.vercel.app')) {
+        return `${origin}/api/${sanitizedPath}`;
       }
 
-      return '/' + normalizedBase + sanitizedPath;
+      if (origin.includes('127.0.0.1:5500') || origin.includes('localhost:5500')) {
+        return `${origin}/checkout/${sanitizedPath}`;
+      }
+
+      if (/^https?:\/\//i.test(sanitizedPath)) {
+        return sanitizedPath;
+      }
+
+      if (origin && sanitizedPath) {
+        return `${origin}/checkout/${sanitizedPath}`;
+      }
+
+      return `/checkout/${sanitizedPath}`;
     }
 
     // Verificação automática do pagamento

@@ -1,41 +1,4 @@
 <?php
-// Tratamento global de erros para garantir sempre resposta JSON
-set_error_handler(function($severity, $message, $file, $line) {
-    error_log("PHP Error: $message in $file on line $line");
-    if (!headers_sent()) {
-        header('Content-Type: application/json');
-        http_response_code(500);
-        echo json_encode([
-            'error' => true,
-            'message' => 'Erro interno do servidor.',
-            'debug' => [
-                'error' => $message,
-                'file' => basename($file),
-                'line' => $line
-            ]
-        ]);
-    }
-    exit;
-});
-
-set_exception_handler(function($exception) {
-    error_log("PHP Exception: " . $exception->getMessage());
-    if (!headers_sent()) {
-        header('Content-Type: application/json');
-        http_response_code(500);
-        echo json_encode([
-            'error' => true,
-            'message' => 'Erro interno do servidor.',
-            'debug' => [
-                'exception' => $exception->getMessage(),
-                'file' => basename($exception->getFile()),
-                'line' => $exception->getLine()
-            ]
-        ]);
-    }
-    exit;
-});
-
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/tribopay_log.php';
@@ -477,3 +440,39 @@ if ($pixCopyPaste) {
 }
 
 respond(201, $finalResponse);
+// Tratamento global de erros para garantir sempre resposta JSON
+set_error_handler(function($severity, $message, $file, $line) {
+    error_log("PHP Error: $message in $file on line $line");
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'error' => true,
+            'message' => 'Erro interno do servidor.',
+            'debug' => [
+                'error' => $message,
+                'file' => basename($file),
+                'line' => $line
+            ]
+        ]);
+    }
+    exit;
+});
+
+set_exception_handler(function($exception) {
+    error_log("PHP Exception: " . $exception->getMessage());
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'error' => true,
+            'message' => 'Erro interno do servidor.',
+            'debug' => [
+                'exception' => $exception->getMessage(),
+                'file' => basename($exception->getFile()),
+                'line' => $exception->getLine()
+            ]
+        ]);
+    }
+    exit;
+});

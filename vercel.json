@@ -1,6 +1,12 @@
 {
   "functions": {
+    "api/api.php": {
+      "runtime": "@vercel/php@0.7.0"
+    },
     "api/checkout.php": {
+      "runtime": "@vercel/php@0.7.0"
+    },
+    "api/verifica.php": {
       "runtime": "@vercel/php@0.7.0"
     },
     "checkout/api.php": {
