@@ -669,6 +669,20 @@
     updateOrderSummary(cart);
   }
 
+  const API_BASE_OVERRIDE = (window.CHECKOUT_API_BASE_URL || document.body?.dataset?.apiBase || '').trim();
+
+  function buildApiUrl(path) {
+    if (API_BASE_OVERRIDE) {
+      try {
+        const normalizedBase = API_BASE_OVERRIDE.endsWith('/') ? API_BASE_OVERRIDE : API_BASE_OVERRIDE + '/';
+        return new URL(path, normalizedBase).toString();
+      } catch (err) {
+        console.warn('API base override inválida:', API_BASE_OVERRIDE, err);
+      }
+    }
+    return path;
+  }
+
   // ===== FUNÇÕES ORIGINAIS DO CHECKOUT =====
   function toggleField(id) {
     const el = document.getElementById(id);
@@ -754,7 +768,9 @@
 
     try {
       persistCurrentCustomerInfo();
-      const response = await fetch("api.php", {
+      const apiEndpoint = buildApiUrl("api.php");
+      console.log("Endpoint TriboPay API:", apiEndpoint);
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -775,11 +791,30 @@
         })
       });
 
-      const data = await response.json();
-      console.log('Resposta TriboPay:', data);
+      const contentType = response.headers.get("content-type") || "";
+      const rawBody = await response.text();
+      console.log("Status TriboPay:", response.status);
+      console.log("Resposta bruta TriboPay:", rawBody);
+
+      let data = null;
+      if (rawBody && contentType.includes("application/json")) {
+        try {
+          data = JSON.parse(rawBody);
+        } catch (parseErr) {
+          console.error("Falha ao converter resposta em JSON:", parseErr);
+          throw new Error("Retorno inválido do gateway (JSON malformado).");
+        }
+      } else if (rawBody) {
+        console.warn("Resposta não JSON recebida:", contentType);
+        throw new Error(`Gateway respondeu com conteúdo inesperado (${contentType || "sem content-type"}).`);
+      } else {
+        throw new Error("Gateway não retornou dados.");
+      }
+
+      console.log("Resposta TriboPay:", data);
 
       if (!response.ok || data.error) {
-        const message = data.message || 'Erro ao criar transação na TriboPay.';
+        const message = data.message || `Erro ao criar transação (HTTP ${response.status}).`;
         throw new Error(message);
       }
 

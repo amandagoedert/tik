@@ -50,6 +50,27 @@ No arquivo `tribopay_config.php`, altere:
 4. **Finalize a compra**
 5. **Verifique** se o PIX é gerado
 
+### Passo 6: Executar o checkout localmente
+
+Quando rodar o projeto em ambiente local, certifique-se de que o backend PHP esteja ativo e acessível pelo navegador:
+
+1. **Suba um servidor PHP** apontando para a pasta `checkout`:
+   ```bash
+   php -S 127.0.0.1:8000 -t checkout
+   ```
+2. **Ajuste o front-end** caso o checkout esteja sendo aberto em outra origem (ex.: `127.0.0.1:5500`).  
+   Defina a variável global antes de carregar o script do checkout:
+   ```html
+   <script>
+     window.CHECKOUT_API_BASE_URL = "http://127.0.0.1:8000/checkout/";
+   </script>
+   ```
+   ou adicione no `<body>`:
+   ```html
+   <body data-api-base="http://127.0.0.1:8000/checkout/">
+   ```
+   Assim as chamadas à API serão enviadas para o servidor PHP correto. Se estiver hospedado em produção, a variável não precisa ser definida.
+
 ## 🔧 Arquivos da Integração
 
 - **api.php** → Cria transações na TriboPay
@@ -75,7 +96,7 @@ No arquivo `tribopay_config.php`, altere:
 
 ### "QR Code não disponível"
 - **Causa:** API não retornou dados do PIX
-- **Solução:** Verificar logs em monetrix_log.php
+- **Solução:** Verificar logs em tribopay_log.php (gateway.log)
 
 ## 📋 Checklist Final
 
@@ -90,7 +111,7 @@ No arquivo `tribopay_config.php`, altere:
 
 Se ainda não funcionar:
 
-1. **Verifique os logs** em `monetrix_log.php`
+1. **Verifique os logs** em `tribopay_log.php` (arquivo `gateway.log`)
 2. **Execute** `teste_config.php` novamente
 3. **Consulte** a documentação TriboPay
 4. **Contate** o suporte da TriboPay

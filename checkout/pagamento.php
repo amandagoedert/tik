@@ -345,7 +345,7 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
 
     <!-- Rodapé -->
     <div class="rodape">
-      IronPay está processando este pedido à serviço de <strong>Victoria's Secret</strong>.<br>
+      TriboPay está processando este pedido à serviço de <strong>Victoria's Secret</strong>.<br>
       Ao prosseguir você está concordando com os <a href="#">termos de uso</a>.
     </div>
   </div>
@@ -359,10 +359,30 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
       alert("Chave PIX copiada!");
     }
 
+    const DEFAULT_API_BASE = '/checkout/';
+    const API_BASE_OVERRIDE = (window.CHECKOUT_API_BASE_URL || document.body?.dataset?.apiBase || '').trim();
+
+    function buildApiUrl(path) {
+      const base = API_BASE_OVERRIDE !== '' ? API_BASE_OVERRIDE : DEFAULT_API_BASE;
+      const normalizedBase = base.endsWith('/') ? base : base + '/';
+      const sanitizedPath = path.replace(/^\/+/, '');
+
+      if (/^https?:\/\//i.test(normalizedBase)) {
+        return normalizedBase + sanitizedPath;
+      }
+
+      if (normalizedBase.startsWith('/')) {
+        return normalizedBase + sanitizedPath;
+      }
+
+      return '/' + normalizedBase + sanitizedPath;
+    }
+
     // Verificação automática do pagamento
     setInterval(async () => {
       try {
-        const res = await fetch("verifica.php?id=<?php echo urlencode($transacao); ?>");
+        const verificaUrl = buildApiUrl("verifica.php?id=<?php echo urlencode($transacao); ?>");
+        const res = await fetch(verificaUrl);
         const data = await res.json();
         if (data.status === "pago") {
           document.getElementById("statusPagamento").innerText = "✅ Pagamento Confirmado!";

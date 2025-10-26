@@ -1,6 +1,8 @@
 <?php
 // Arquivo para verificar status de pagamento TriboPay
 
+require_once __DIR__ . '/tribopay_log.php';
+
 // Permitir requisições AJAX
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -9,10 +11,10 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 // Função para registrar logs
 function logPaymentCheck($message) {
-    $logFile = 'monetrix_log.php';
-    $timestamp = date('[Y-m-d H:i:s]');
-    $logEntry = "<?php exit; ?>\n$timestamp PAYMENT_CHECK: $message\n";
-    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+    logGateway([
+        'etapa' => 'verificacao_status',
+        'mensagem' => $message,
+    ]);
 }
 
 try {
@@ -33,14 +35,19 @@ try {
     }
     
     // URL da API TriboPay para consultar transação
-    $apiUrl = "https://api.tribopay.com.br/v1/transaction/status";
-    
+    $apiUrl = "https://api.tribopay.com.br/api/public/v1/transactions/status";
+
     // Dados para consulta
     $payload = [
-        'token' => $config['api_token'],
-        'transaction_hash' => $transactionId
+        'transaction_hash' => $transactionId,
     ];
-    
+
+    logGateway([
+        'etapa' => 'verificacao_payload',
+        'endpoint' => $apiUrl,
+        'payload' => $payload,
+    ]);
+
     // Configurar cURL
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -51,16 +58,24 @@ try {
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
             'Accept: application/json',
-            'User-Agent: VictoriasSecret-Store/1.0'
+            'Authorization: Bearer ' . $config['api_token'],
+            'User-Agent: VictoriasSecret-Store/1.0',
         ],
         CURLOPT_TIMEOUT => 30,
-        CURLOPT_SSL_VERIFYPEER => false
+        CURLOPT_SSL_VERIFYPEER => true,
     ]);
-    
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     curl_close($ch);
+
+    logGateway([
+        'etapa' => 'verificacao_resposta_raw',
+        'status' => $httpCode,
+        'erro' => $curlError,
+        'response_preview' => is_string($response) ? substr($response, 0, 3000) : null,
+    ]);
     
     if ($curlError) {
         throw new Exception("Erro cURL: $curlError");

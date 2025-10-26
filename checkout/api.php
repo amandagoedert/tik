@@ -1,9 +1,21 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/monetrix_log.php';
+require_once __DIR__ . '/tribopay_log.php';
 
-const TRIBOPAY_ENDPOINT = 'https://api.tribopay.com.br/v1/transaction';
+const TRIBOPAY_ENDPOINT = 'https://api.tribopay.com.br/api/public/v1/transactions';
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
+$allowedOrigin = $origin !== '' ? $origin : '*';
+header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+header('Vary: Origin');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
 
 function respond(int $status, array $payload): void {
     http_response_code($status);
@@ -52,10 +64,8 @@ function onlyDigits(?string $value): string {
 }
 
 function toCents($value): int {
-    if (is_int($value)) {
-        return $value;
-    }
-    if (is_float($value)) {
+    // Sempre converte para centavos, assumindo que o valor de entrada está em reais
+    if (is_int($value) || is_float($value)) {
         return (int) round($value * 100);
     }
     $value = str_replace(['.', ','], ['', '.'], (string) $value);
@@ -234,7 +244,7 @@ foreach ($produtos as $produto) {
     $cartItem = [
         'product_hash' => $productHash,
         'title' => $title,
-        'price' => $price,
+        'price' => $price,  // Preço em centavos conforme documentação
         'quantity' => $quantity,
         'operation_type' => (int) ($produto['operation_type'] ?? $productConfig['operation_type'] ?? $config['default_operation_type'] ?? 1),
         'tangible' => (bool) ($produto['tangible'] ?? $productConfig['tangible'] ?? $config['default_tangible'] ?? false),
@@ -276,13 +286,15 @@ if (!$postbackUrl) {
 
 $paymentMethod = $data['payment_method'] ?? 'pix';
 $payload = [
-    'amount' => $amount,
+    'api_token' => $apiToken,  // TriboPay requer api_token no payload
+    'amount' => $amount,  // Valor em centavos conforme documentação
     'offer_hash' => $offerHash,
     'payment_method' => $paymentMethod,
     'customer' => $customer,
     'cart' => $cart,
     'expire_in_days' => $expireInDays,
     'transaction_origin' => $data['transaction_origin'] ?? 'api',
+    'installments' => 1,  // Obrigatório mesmo para PIX
 ];
 
 if ($paymentMethod === 'credit_card' && isset($data['card']) && is_array($data['card'])) {
@@ -305,16 +317,17 @@ if (!empty($data['pedido_ref'])) {
 
 logGateway(['etapa' => 'payload', 'payload' => $payload]);
 
-$endpoint = TRIBOPAY_ENDPOINT . '?api_token=' . urlencode($apiToken);
+$endpoint = TRIBOPAY_ENDPOINT;
 
 $curl = curl_init();
 curl_setopt_array($curl, [
     CURLOPT_URL => $endpoint,
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POST => true,
     CURLOPT_HTTPHEADER => [
         'Content-Type: application/json',
         'Accept: application/json',
+        'Authorization: ' . 'Bearer ' . $apiToken,
     ],
     CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
     CURLOPT_TIMEOUT => 60,
@@ -323,9 +336,21 @@ curl_setopt_array($curl, [
 $response = curl_exec($curl);
 $curlError = curl_error($curl);
 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+logGateway([
+    'etapa' => 'curl_debug',
+    'endpoint' => $endpoint,
+    'http_code' => $httpCode,
+    'curl_error' => $curlError,
+    'response_preview' => is_string($response) ? substr($response, 0, 5000) : null,
+]);
 curl_close($curl);
 
-logGateway(['etapa' => 'tribopay_response_raw', 'status' => $httpCode, 'response' => $response, 'erro' => $curlError]);
+logGateway([
+    'etapa' => 'tribopay_response_raw',
+    'status' => $httpCode,
+    'response' => $response,
+    'erro' => $curlError,
+]);
 
 if ($curlError) {
     respond(500, ['error' => true, 'message' => 'Erro de comunicação com a TriboPay: ' . $curlError]);
