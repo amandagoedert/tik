@@ -217,9 +217,16 @@
       margin-top: 6px;
       opacity: 0.9;
     }
+    .checkout-button.is-loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .checkout-button.is-loading .checkout-button-subtext {
+      opacity: 0.7;
+    }
     .hidden { display: none !important; }
-    #pix-qrcode { text-align: center; margin: 20px; }
-    #pix-qrcode img { width: 200px; }
+    #pix-qrcode { text-align: center; margin: 0; }
+    #pix-qrcode img { width: 220px; max-width: 220px; }
     .products-container {
       border-bottom: 8px solid #f2f2f2;
     }
@@ -334,13 +341,51 @@
       <span id="footer-total" class="total-value">R$ 0,00</span>
     </div>
     <button id="checkout-btn" class="checkout-button">
-      <span>Fazer pedido</span>
+      <span class="checkout-button-text">Fazer pedido</span>
       <span class="checkout-button-subtext">O cupom expira em <span id="checkout-countdown">00:05:00</span> | Frete grátis</span>
     </button>
   </div>
 
-  <!-- QR Code PIX -->
-  <div id="pix-qrcode"></div>
+  <!-- Modal PIX -->
+  <div id="pix-modal" class="pix-modal" hidden>
+    <div class="pix-modal-backdrop" onclick="fecharPixModal()" aria-hidden="true"></div>
+    <div class="pix-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="pix-modal-title" tabindex="-1">
+      <div id="pix-sheet" class="pix-sheet">
+        <div class="pix-sheet-drag-handle" aria-hidden="true"></div>
+        <div class="pix-sheet-header">
+          <div class="pix-sheet-status">
+            <span id="pix-status" class="pix-sheet-status-title">Aguardando pagamento</span>
+            <span id="pix-sheet-value" class="pix-sheet-value">R$ 0,00</span>
+          </div>
+          <div class="pix-sheet-expiration">
+            <span class="pix-sheet-exp-label">Vence em:</span>
+            <span id="pix-expiration-timer" class="pix-expiration-timer">00:10:00</span>
+          </div>
+        </div>
+
+        <div class="pix-sheet-body">
+          <div class="pix-sheet-instructions">
+            <h3>Escaneie o QR code</h3>
+            <p>Use o app do seu banco para ler o código ou copie o código PIX abaixo.</p>
+          </div>
+
+          <div class="pix-qrcode-container">
+            <div id="pix-qrcode" class="pix-qrcode"></div>
+          </div>
+
+          <div class="pix-codigo-container">
+            <div class="pix-label">Código PIX (copia e cola)</div>
+            <div class="pix-input-group">
+              <input type="text" id="pix-codigo" class="pix-codigo-input" readonly>
+              <button id="pix-copiar" class="pix-copiar-btn" onclick="copiarCodigoPix()">Copiar PIX</button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="pix-sheet-close" onclick="fecharPixModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
 
 <script>
   // ===== SISTEMA DE CARRINHO =====
@@ -562,6 +607,61 @@
     }, 1000);
   }
 
+  const PIX_COUNTDOWN_SECONDS = 10 * 60;
+  let pixCountdownInterval = null;
+  let pixCountdownRemaining = PIX_COUNTDOWN_SECONDS;
+
+  function formatPixCountdown(seconds) {
+    const safe = Math.max(seconds, 0);
+    const h = Math.floor(safe / 3600).toString().padStart(2, '0');
+    const m = Math.floor((safe % 3600) / 60).toString().padStart(2, '0');
+    const s = Math.floor(safe % 60).toString().padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
+  function atualizarPixCountdownDisplay() {
+    const timerEl = document.getElementById('pix-expiration-timer');
+    if (timerEl) {
+      timerEl.textContent = formatPixCountdown(pixCountdownRemaining);
+    }
+  }
+
+  function marcarPixComoExpirado() {
+    const statusEl = document.getElementById('pix-status');
+    if (statusEl) {
+      statusEl.textContent = 'Tempo expirado. Gere um novo PIX.';
+      statusEl.classList.remove('is-success');
+      statusEl.classList.add('is-warning');
+    }
+    const timerEl = document.getElementById('pix-expiration-timer');
+    if (timerEl) {
+      timerEl.textContent = formatPixCountdown(0);
+    }
+    mostrarNotificacao('O tempo do PIX expirou. Gere um novo pagamento.', 'error');
+  }
+
+  function pararPixCountdown() {
+    if (pixCountdownInterval) {
+      clearInterval(pixCountdownInterval);
+      pixCountdownInterval = null;
+    }
+  }
+
+  function iniciarPixCountdown() {
+    pararPixCountdown();
+    pixCountdownRemaining = PIX_COUNTDOWN_SECONDS;
+    atualizarPixCountdownDisplay();
+
+    pixCountdownInterval = setInterval(() => {
+      pixCountdownRemaining -= 1;
+      atualizarPixCountdownDisplay();
+      if (pixCountdownRemaining <= 0) {
+        pararPixCountdown();
+        marcarPixComoExpirado();
+      }
+    }, 1000);
+  }
+
   function normalizeQuantity(item) {
     const value = Number(item?.quantity ?? item?.qty ?? 1);
     if (!Number.isFinite(value) || value <= 0) return 1;
@@ -774,6 +874,37 @@
       image: item.image || null
     }));
 
+    const botaoCheckout = document.getElementById('checkout-btn');
+    const botaoTexto = botaoCheckout.querySelector('.checkout-button-text');
+    const textoOriginal = botaoTexto ? botaoTexto.textContent : botaoCheckout.textContent;
+    const aplicarEstadoCarregando = () => {
+      if (botaoTexto) {
+        botaoTexto.innerHTML = `
+          <span style="display: inline-flex; align-items: center; justify-content: center;">
+            <svg style="animation: spin 1s linear infinite; margin-right: 8px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+            Gerando PIX, aguarde...
+          </span>
+        `;
+      }
+      botaoCheckout.disabled = true;
+      botaoCheckout.classList.add('is-loading');
+      botaoCheckout.setAttribute('aria-busy', 'true');
+      botaoCheckout.setAttribute('aria-disabled', 'true');
+    };
+    const restaurarEstadoBotao = () => {
+      if (botaoTexto) {
+        botaoTexto.textContent = textoOriginal;
+      }
+      botaoCheckout.disabled = false;
+      botaoCheckout.classList.remove('is-loading');
+      botaoCheckout.removeAttribute('aria-busy');
+      botaoCheckout.removeAttribute('aria-disabled');
+    };
+
+    aplicarEstadoCarregando();
+
     try {
       persistCurrentCustomerInfo();
       const apiEndpoint = buildApiUrl("api.php");
@@ -826,26 +957,46 @@
         throw new Error(message);
       }
 
-      // Extrair dados do PIX da resposta TriboPay
-      const qrCodeImage = data.pix?.qr_code_base64 || data.qr_code_image_url || data.qrcode_image_url || null;
-      const pixPayload = data.pix?.pix_qr_code || data.pix?.pix_url || data.pix_copy_paste || data.qrcode || null;
+      // Extrair dados do PIX da resposta TriboPay com mais opções
+      console.log("Dados completos da resposta TriboPay:", JSON.stringify(data, null, 2));
+      
+      // Tentar diferentes campos para QR Code base64
+      const qrCodeImage = data.pix?.qr_code_base64 || 
+                         data.qr_code_image_url || 
+                         data.qrcode_image_url || 
+                         data.qr_code_base64 ||
+                         data.qrcode_base64 ||
+                         null;
+      
+      // Tentar diferentes campos para código PIX
+      const pixPayload = data.pix?.pix_qr_code || 
+                        data.pix?.pix_url || 
+                        data.pix?.qr_code || 
+                        data.pix_copy_paste || 
+                        data.qrcode || 
+                        data.pix_qr_code ||
+                        data.qr_code ||
+                        null;
 
-      if (qrCodeImage || pixPayload) {
-        const transactionHash = data.hash || `${Date.now()}`;
-        
-        // Exibir popup com PIX em vez de redirecionar
-        mostrarPopupPix({
-          transacao: transactionHash,
-          nome: nome,
-          email: email,
-          telefone: telefone,
-          hash: transactionHash,
-          pix: pixPayload || '',
-          qrcode: qrCodeImage || '',
-          valor: amountFormatted.replace(".", ","),
-          produtos: produtos,
-          dadosCompletos: data
-        });
+      console.log("QR Code extraído:", qrCodeImage ? "✅ Encontrado" : "❌ Não encontrado");
+      console.log("Código PIX extraído:", pixPayload ? `✅ Encontrado (${pixPayload.length} chars)` : "❌ Não encontrado");
+
+      // Sempre tentar exibir o PIX, mesmo se alguns dados estiverem faltando
+      const transactionHash = data.hash || data.id || `TXN_${Date.now()}`;
+      
+      // Exibir PIX inline na página
+      exibirPixInline({
+        transacao: transactionHash,
+        nome: nome,
+        email: email,
+        telefone: telefone,
+        hash: transactionHash,
+        pix: pixPayload || '',
+        qrcode: qrCodeImage || '',
+        valor: amountFormatted.replace(".", ","),
+        produtos: produtos,
+        dadosCompletos: data
+      });
         
         // Iniciar verificação de pagamento
         iniciarVerificacaoPagamento(transactionHash, {
@@ -853,12 +1004,10 @@
           valor: amountFormatted.replace(".", ","),
           produtos: JSON.stringify(produtos)
         });
-        
-      } else {
-        throw new Error(data.message || 'Não foi possível obter os dados do PIX.');
-      }
     } catch (err) {
       alert("Erro na comunicação com o servidor: " + err.message);
+    } finally {
+      restaurarEstadoBotao();
     }
   });
 
@@ -869,48 +1018,89 @@
     loadCheckout();
   });
 
-  // ===== FUNÇÕES DO POPUP PIX =====
-  function mostrarPopupPix(dados) {
-    const popup = document.getElementById('popup-pix');
-    const overlay = document.getElementById('popup-overlay');
-    
-    // Preencher dados do popup
-    document.getElementById('pix-transacao').textContent = dados.transacao;
-    document.getElementById('pix-nome').textContent = dados.nome;
-    document.getElementById('pix-valor').textContent = `R$ ${dados.valor}`;
-    
-    // QR Code
-    const qrContainer = document.getElementById('pix-qrcode');
-    if (dados.pix) {
-      qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.pix)}" alt="QR Code PIX" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">`;
-    } else {
-      qrContainer.innerHTML = '<p style="color:#999;">QR Code não disponível</p>';
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.classList.contains('pix-modal-open')) {
+      fecharPixModal();
     }
+  });
+
+  // ===== FUNÇÕES DO PIX INLINE =====
+  function exibirPixInline(dados) {
+    console.log('Exibindo PIX inline com dados:', dados);
+    
+    const pixModal = document.getElementById('pix-modal');
+    const statusEl = document.getElementById('pix-status');
+    const valueEl = document.getElementById('pix-sheet-value');
+    
+    if (statusEl) {
+      statusEl.textContent = 'Aguardando pagamento';
+      statusEl.classList.remove('is-success', 'is-warning');
+    }
+    if (valueEl) {
+      valueEl.textContent = `R$ ${dados.valor || '0,00'}`;
+    }
+    
+    // QR Code - verificar diferentes formatos possíveis
+    const qrContainer = document.getElementById('pix-qrcode');
+    let qrCodeHtml = '';
+    
+    // Primeiro, tentar usar QR code base64 se disponível
+    if (dados.qrcode && dados.qrcode.startsWith('data:image')) {
+      qrCodeHtml = `<img src="${dados.qrcode}" alt="QR Code PIX" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">`;
+    }
+    // Senão, tentar gerar QR code a partir do código PIX
+    else if (dados.pix && dados.pix.length > 10) {
+      qrCodeHtml = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(dados.pix)}" alt="QR Code PIX" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" onload="console.log('QR Code carregado com sucesso')" onerror="console.error('Erro ao carregar QR Code'); this.style.display='none'; this.parentNode.innerHTML += '<p style=\\'color:#f53d5c; font-weight:bold;\\'>Use o código copia e cola abaixo</p>';">`;
+    }
+    // Caso contrário, mostrar mensagem
+    else {
+      qrCodeHtml = '<div style="padding: 20px; text-align: center; color: #f53d5c; font-weight: bold;"><p>🔄 Gerando QR Code...</p><p style="font-size: 0.9em; color: #666;">Use o código copia e cola abaixo</p></div>';
+    }
+    
+    qrContainer.innerHTML = qrCodeHtml;
     
     // Código PIX
     const pixInput = document.getElementById('pix-codigo');
-    if (dados.pix) {
+    const pixCopiarBtn = document.getElementById('pix-copiar');
+    
+    if (dados.pix && dados.pix.length > 10) {
       pixInput.value = dados.pix;
       pixInput.style.display = 'block';
-      document.getElementById('pix-copiar').style.display = 'inline-block';
+      pixCopiarBtn.style.display = 'inline-block';
+      console.log('Código PIX definido:', dados.pix.substring(0, 50) + '...');
     } else {
-      pixInput.style.display = 'none';
-      document.getElementById('pix-copiar').style.display = 'none';
+      pixInput.value = 'Código PIX não disponível';
+      pixInput.style.display = 'block';
+      pixCopiarBtn.style.display = 'none';
+      console.warn('Código PIX não encontrado nos dados');
+    }
+
+    iniciarPixCountdown();
+
+    if (pixModal) {
+      pixModal.removeAttribute('hidden');
+      pixModal.classList.add('open');
+      document.body.classList.add('pix-modal-open');
+      
+      // Focar botão de copiar para acessibilidade
+      const dialog = pixModal.querySelector('.pix-modal-dialog');
+      dialog?.focus();
+    } else {
+      console.warn('Modal PIX não encontrado.');
     }
     
-    // Mostrar popup
-    overlay.style.display = 'flex';
-    setTimeout(() => {
-      overlay.classList.add('show');
-    }, 10);
+    console.log('PIX inline exibido com sucesso');
   }
 
-  function fecharPopupPix() {
-    const overlay = document.getElementById('popup-overlay');
-    overlay.classList.remove('show');
-    setTimeout(() => {
-      overlay.style.display = 'none';
-    }, 300);
+  function fecharPixModal() {
+    const pixModal = document.getElementById('pix-modal');
+    if (pixModal) {
+      pixModal.classList.remove('open');
+      pixModal.setAttribute('hidden', '');
+    }
+    pararPixCountdown();
+    document.body.classList.remove('pix-modal-open');
+    document.getElementById('checkout-btn')?.focus();
   }
 
   async function copiarCodigoPix() {
@@ -981,16 +1171,22 @@
         
         if (data.status === "pago" || data.success === true) {
           clearInterval(verificar);
+          pararPixCountdown();
           
-          // Atualizar status no popup
-          document.getElementById('pix-status').innerHTML = '✅ <strong>Pagamento Confirmado!</strong>';
-          document.getElementById('pix-status').style.background = '#d4edda';
-          document.getElementById('pix-status').style.color = '#155724';
+          const statusEl = document.getElementById('pix-status');
+          if (statusEl) {
+            statusEl.textContent = 'Pagamento confirmado!';
+            statusEl.classList.remove('is-warning');
+            statusEl.classList.add('is-success');
+          }
+          const timerEl = document.getElementById('pix-expiration-timer');
+          if (timerEl) timerEl.textContent = formatPixCountdown(0);
+          
+          // Mostrar notificação de sucesso
+          mostrarNotificacao("Pagamento confirmado! Redirecionando...", "success");
           
           // Aguardar 3 segundos e redirecionar
           setTimeout(() => {
-            fecharPopupPix();
-            
             // Redirecionar para página de sucesso
             const params = new URLSearchParams({
               transacao: transacaoId,
@@ -1001,9 +1197,13 @@
           
         } else if (tentativas >= maxTentativas) {
           clearInterval(verificar);
-          document.getElementById('pix-status').innerHTML = '⏰ Tempo limite atingido. Recarregue a página para tentar novamente.';
-          document.getElementById('pix-status').style.background = '#fff3cd';
-          document.getElementById('pix-status').style.color = '#856404';
+          pararPixCountdown();
+          const statusEl = document.getElementById('pix-status');
+          if (statusEl) {
+            statusEl.textContent = 'Tempo limite atingido. Gere um novo PIX.';
+            statusEl.classList.remove('is-success');
+            statusEl.classList.add('is-warning');
+          }
         }
         
       } catch (error) {
@@ -1017,230 +1217,237 @@
 
 </script>
 
-<!-- Popup Modal PIX -->
-<div id="popup-overlay" class="popup-overlay">
-  <div id="popup-pix" class="popup-pix">
-    <div class="popup-header">
-      <h2>💳 Pagamento PIX</h2>
-      <button class="popup-close" onclick="fecharPopupPix()">×</button>
-    </div>
-    
-    <div class="popup-content">
-      <div class="pix-info">
-        <p><strong>Transação:</strong> <span id="pix-transacao"></span></p>
-        <p><strong>Cliente:</strong> <span id="pix-nome"></span></p>
-        <p><strong>Valor:</strong> <span id="pix-valor" style="color: #f53d5c; font-size: 1.2em;"></span></p>
-      </div>
-      
-      <div class="pix-status" id="pix-status">
-        ⏳ Aguardando pagamento...
-      </div>
-      
-      <div class="pix-instructions">
-        <h3>📱 Como pagar:</h3>
-        <ol>
-          <li>Escaneie o QR Code <strong>OU</strong> copie o código</li>
-          <li>Abra o app do seu banco</li>
-          <li>Vá em <strong>PIX → Pagar</strong></li>
-          <li>Confirme o pagamento</li>
-        </ol>
-      </div>
-      
-      <div class="pix-qrcode-container">
-        <div id="pix-qrcode" class="pix-qrcode"></div>
-      </div>
-      
-      <div class="pix-codigo-container">
-        <label>Código PIX (Copia e Cola):</label>
-        <div class="pix-input-group">
-          <input type="text" id="pix-codigo" class="pix-codigo-input" readonly>
-          <button id="pix-copiar" class="pix-copiar-btn" onclick="copiarCodigoPix()">📋 Copiar</button>
-        </div>
-      </div>
-      
-      <div class="popup-footer">
-        <small>✅ O pagamento será confirmado automaticamente</small>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- CSS para animação de rotação -->
+<style>
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
 
 <style>
-  .popup-overlay {
+  /* CSS para modal PIX */
+  body.pix-modal-open {
+    overflow: hidden;
+  }
+  .pix-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    inset: 0;
     display: none;
-    align-items: center;
     justify-content: center;
-    z-index: 10000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    align-items: flex-end;
+    padding: 24px 16px;
+    z-index: 1000;
   }
-  
-  .popup-overlay.show {
-    opacity: 1;
-  }
-  
-  .popup-pix {
-    background: white;
-    border-radius: 16px;
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    transform: scale(0.8);
-    transition: transform 0.3s ease;
-  }
-  
-  .popup-overlay.show .popup-pix {
-    transform: scale(1);
-  }
-  
-  .popup-header {
-    background: linear-gradient(135deg, #f53d5c, #e02d49);
-    color: white;
-    padding: 20px;
-    border-radius: 16px 16px 0 0;
+  .pix-modal.open {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
-  
-  .popup-header h2 {
-    margin: 0;
-    font-size: 1.4em;
+  .pix-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
   }
-  
-  .popup-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  .pix-modal-dialog {
+    position: relative;
+    z-index: 1;
+    width: min(460px, 100%);
+    margin-bottom: max(env(safe-area-inset-bottom), 16px);
+  }
+  .pix-sheet {
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 32px 48px rgba(15, 23, 42, 0.25);
+    overflow: hidden;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    animation: slideUp 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  
-  .popup-close:hover {
-    background: rgba(255, 255, 255, 0.2);
+  .pix-sheet-drag-handle {
+    width: 56px;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.15);
+    margin: 14px auto 4px;
   }
-  
-  .popup-content {
-    padding: 20px;
+  .pix-sheet-header {
+    padding: 12px 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
-  
-  .pix-info {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  .pix-info p {
-    margin: 5px 0;
-  }
-  
-  .pix-status {
-    background: #fff3cd;
-    color: #856404;
-    padding: 15px;
-    border-radius: 8px;
+  .pix-sheet-status {
     text-align: center;
-    margin-bottom: 15px;
-    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
-  
-  .pix-instructions {
-    background: #e7f3ff;
-    padding: 15px;
-    border-radius: 8px;
+  .pix-sheet-status-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+  }
+  .pix-sheet-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ef3e64;
+  }
+  .pix-sheet-expiration {
+    background: rgba(239, 62, 100, 0.08);
+    color: #ef3e64;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    align-self: center;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .pix-sheet-body {
+    padding: 16px 24px 24px;
+  }
+  .pix-sheet-instructions {
+    text-align: center;
     margin-bottom: 20px;
-    border-left: 4px solid #007bff;
   }
-  
-  .pix-instructions h3 {
-    margin: 0 0 10px 0;
-    color: #007bff;
+  .pix-sheet-instructions h3 {
+    margin: 12px 0 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
   }
-  
-  .pix-instructions ol {
+  .pix-sheet-instructions p {
     margin: 0;
-    padding-left: 20px;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+  .pix-sheet-exp-label {
+    opacity: 0.8;
+  }
+  .pix-expiration-timer {
+    font-variant-numeric: tabular-nums;
+  }
+  .pix-sheet-status-title.is-success {
+    color: #16a34a;
+  }
+  .pix-sheet-status-title.is-warning {
+    color: #b45309;
+  }
+  .pix-sheet-close {
+    border: none;
+    border-radius: 0;
+    background: #ef3e64;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .pix-sheet-close:hover {
+    background: #d92c52;
+  }
+
+  /* CSS para seção PIX inline */
+  .pix-section {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  
+  .pix-container {
+    max-width: 100%;
   }
   
   .pix-qrcode-container {
     text-align: center;
-    margin: 20px 0;
+    margin: 24px 0;
   }
   
   .pix-qrcode {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 12px;
-    border: 2px dashed #f53d5c;
-    display: inline-block;
+    background: white;
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    display: inline-flex;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
   }
   
   .pix-codigo-container {
-    margin: 20px 0;
+    margin: 24px 0;
   }
   
-  .pix-codigo-container label {
+  .pix-label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: #495057;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 0.95rem;
   }
   
   .pix-input-group {
     display: flex;
-    border-radius: 8px;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
   }
   
   .pix-codigo-input {
     flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-right: none;
-    font-family: monospace;
-    font-size: 12px;
-    background: #f8f9fa;
-    color: #495057;
+    padding: 16px;
+    border: none;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #0f172a;
+    letter-spacing: 0.03em;
+    min-height: 56px;
   }
   
   .pix-copiar-btn {
-    padding: 12px 16px;
-    background: #f53d5c;
+    padding: 0 18px;
+    background: #ef3e64;
     color: white;
     border: none;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.25s ease, transform 0.2s ease;
+    min-width: 120px;
   }
   
   .pix-copiar-btn:hover {
-    background: #e02d49;
+    background: #d92c52;
+    transform: translateY(-1px);
   }
   
-  .popup-footer {
+  .pix-footer {
     text-align: center;
     color: #6c757d;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+    font-size: 1.1em;
   }
+  .pix-footer {
+    display: none;
+  }
+  
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
   @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
@@ -1248,17 +1455,32 @@
   }
   
   @media (max-width: 600px) {
-    .popup-pix {
-      width: 95%;
+    .pix-section {
       margin: 10px;
-    }
-    
-    .popup-content {
       padding: 15px;
     }
     
+    .pix-container {
+      padding: 10px;
+    }
+    
     .pix-codigo-input {
-      font-size: 10px;
+      font-size: 0.9rem;
+      padding: 14px;
+    }
+    
+    .pix-copiar-btn {
+      padding: 14px 16px;
+      font-size: 0.9rem;
+    }
+    
+    .pix-qrcode {
+      padding: 15px;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+    }
+    
+    .pix-sheet {
+      border-radius: 24px;
     }
   }
 </style>
