@@ -1,0 +1,17 @@
+{
+  "id": "recom-9",
+  "title": "Kit Victoria Secrets",
+  "price": "R$ 85,26",
+  "oldPrice": "R$ 94,73",
+  "image": "images/vs9.png",
+  "buy": "#",
+  "sold": "8.1k vendido(s)",
+  "collections": [
+    "recommended"
+  ],
+  "badges": [
+    "10% OFF"
+  ],
+  "soldText": "8.1k vendido(s)",
+  "description": "Kit Victoria Secrets reúne cuidados essenciais para deixar a pele perfumada o dia todo."
+}

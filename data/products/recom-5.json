@@ -1,0 +1,17 @@
+{
+  "id": "recom-5",
+  "title": "Kit Victoria Secrets",
+  "price": "R$ 85,26",
+  "oldPrice": "R$ 94,73",
+  "image": "images/vs5.png",
+  "buy": "#",
+  "sold": "3.1k vendido(s)",
+  "collections": [
+    "recommended"
+  ],
+  "badges": [
+    "10% OFF"
+  ],
+  "soldText": "3.1k vendido(s)",
+  "description": "Kit Victoria Secrets apresenta combinação de itens clássicos ideal para presentear."
+}

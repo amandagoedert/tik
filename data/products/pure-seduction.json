@@ -1,0 +1,73 @@
+{
+  "id": "pure-seduction",
+  "pagePath": "pure/index.html",
+  "title": "Body Splash Victoria's Secret Pure Seduction 250ml",
+  "subtitle": "Ameixa vermelha e frésia para uma fragrância envolvente",
+  "price": "R$ 119,92",
+  "priceValue": 119.92,
+  "oldPrice": "R$ 179,83",
+  "discount": "-50%",
+  "badge": "Oferta Relâmpago",
+  "rating": 4.7,
+  "ratingCount": 52,
+  "ratingText": "4.7 (52) 642 vendidos",
+  "soldText": "642 vendidos",
+  "storeSoldText": "51.8K vendidos",
+  "gallery": [
+    {
+      "src": "pure/images/body3.png",
+      "alt": "Body Splash Pure Seduction"
+    }
+  ],
+  "descriptionBlocks": [
+    {
+      "type": "paragraph",
+      "text": "O Body Splash Victoria's Secret Pure Seduction combina ameixa vermelha suculenta com frésia adocicada para um aroma marcante e feminino. Ideal para quem busca frescor e sensualidade durante todo o dia."
+    },
+    {
+      "type": "heading",
+      "text": "Características"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Quantidade: Body Splash Victoria's Secret Pure Seduction 250ml"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Cuidados Especiais"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Manter fora do alcance de crianças.",
+        "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+        "Evitar contato com os olhos e mucosas.",
+        "Uso externo. Não ingerir.",
+        "Em caso de irritação, suspender o uso imediatamente.",
+        "Manter o frasco bem fechado após o uso.",
+        "Inflamável: manter afastado de fontes de calor e chamas."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Garantia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+    }
+  ],
+  "recommendations": [
+    "bare-vanilla",
+    "bare-vanilla-lotion",
+    "love-spell",
+    "kit-vanilla"
+  ],
+  "buyPath": "carrinho/",
+  "collections": [
+    "product-page"
+  ],
+  "description": "Body Splash Pure Seduction traz notas de ameixa vermelha e frésia adocicada para uma sensação fresca e sensual."
+}

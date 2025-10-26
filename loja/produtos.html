@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+   <title>
+    Aura Parfum
+   </title>
+   <script src="https://cdn.tailwindcss.com">
+   </script>
+   <style>
+    /* Reset e largura mobile-first */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+    @font-face { font-family: 'TikTokFont'; src: url('../fonts/TikTokFont-Regular.woff2') format('woff2'), url('../fonts/TikTokFont-Regular.woff') format('woff'); font-weight:400; font-style:normal; font-display:swap; }
+    @font-face { font-family: 'TikTokFont'; src: url('../fonts/TikTokFont-Semibold.woff2') format('woff2'), url('../fonts/TikTokFont-Semibold.woff') format('woff'); font-weight:600; font-style:normal; font-display:swap; }
+    @font-face { font-family: 'TikTokDisplayFont'; src: url('../fonts/TikTokDisplayFont-Bold.woff2') format('woff2'), url('../fonts/TikTokDisplayFont-Bold.woff') format('woff'); font-weight:700; font-style:normal; font-display:swap; }
+    body { font-family: 'TikTokFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#fff; color:#111; }
+    /* Conteúdo centralizado com largura 20% maior */
+    .app { width: 100%; max-width: 516px; margin: 0 auto; background:#fff; }
+    img, svg, video { max-width: 100%; height: auto; }
+    .shadow-hairline { box-shadow: inset 0 -1px 0 0 rgba(0,0,0,.06); }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+    .price { font-family: 'TikTokDisplayFont', 'TikTokFont', sans-serif; }
+    .tab-active { border-bottom: 2px solid #111; color:#111; font-weight:600; }
+  .truncate-2 { display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .search-wrapper { display:flex; align-items:center; gap:8px; background:#f3f4f6; border-radius:12px; padding:0 12px; height:36px; color:#9ca3af; }
+    .search-wrapper:focus-within { background:#e5e7eb; }
+    .search-wrapper .search-icon { font-size:14px; line-height:1; }
+    .search-wrapper input { flex:1; border:none; background:transparent; outline:none; font-size:14px; color:#111; padding:0; }
+    .search-wrapper input::placeholder { color:#9ca3af; }
+    .app.searching .list-products { display:none !important; }
+    .app.searching[data-view="grid"] .list-products[data-has-results="true"] { display:grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; padding:0 16px 16px; }
+    .app.searching:not([data-view="grid"]) .list-products[data-has-results="true"] { display:block !important; }
+    #search-empty { display:none; padding:24px 16px; text-align:center; color:#6b7280; font-size:14px; }
+
+    /* Botões Seguir e Mensagem (iguais ao print) */
+    .btn { height: 28px; min-width: 110px; border-radius: 7px; font-weight: 700; font-size: 12.6px; display:inline-flex; align-items:center; justify-content:center; }
+    .btn-follow { background:#fe2c55; color:#fff; border:none; }
+    .btn-follow.is-following { background:#e5e7eb; color:#374151; border:1px solid #d1d5db; }
+    .btn-message { background:#fff; border:1px solid #e6e6e6; color:#111; }
+
+    /* Efeito de ticket no banner do cupom */
+    .cupom { position: relative; border-radius: 12px; border: 1px solid #f0f2f5; }
+    .cupom::before,
+    .cupom::after { content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: var(--background, #ffffff); top: 50%; transform: translateY(-50%); }
+    .cupom::before { left: -5px; }
+    .cupom::after { right: -5px; }
+
+    /* Botão duplo: carrinho + comprar (grudados) */
+    .buy-group { display: inline-flex; align-items: center; border-radius: 6px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+    .btn-cart { width: 27px; height: 24px; background: #fde8ee; color: #e7325d; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-cart svg { width: 15px; height: 15px; }
+    .btn-buy  { height: 24px; background: #e7325d; color: #fff; font-weight: 700; font-size: 15px; padding: 0 9px; border-left: 1px solid #f7cbd6; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+    .btn-buy:active, .btn-cart:active { transform: translateY(0.5px); }
+    .cart-count-badge { position:absolute; top:-6px; right:-8px; background:#ff2d55; color:#fff; border-radius:999px; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; }
+    /* Utilitário: esconder scrollbar para carrosséis */
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    /* Medalhas de ranking simples */
+    .rank-badge { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:12px; font-weight:700; color:#6b7280; background:#f3f4f6; border-radius:6px; }
+    .rank-1 { background:#fde68a; color:#92400e; }
+    .rank-2 { background:#e5e7eb; color:#4b5563; }
+    .rank-3 { background:#fcd5b5; color:#9a3412; }
+    /* Badge de ranking hexagonal */
+    .badge-rank { position:absolute; top:8px; left:8px; width:26px; height:28px; clip-path: polygon(25% 0%, 75% 0%, 100% 37%, 75% 100%, 25% 100%, 0% 37%); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#333; }
+    .rank-gold { background:#FFD700; }
+    .rank-silver { background:#C0C0C0; }
+    .rank-bronze { background:#CD7F32; }
+    /* Imagem quadrada do produto (principais) */
+    .product-media { width:100%; height:170px; }
+    /* Tipografia e badges para Principais produtos */
+    .product-title { font-size: 13px; font-weight: 700; color:#000; margin-top:0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .price-row { display:flex; align-items:baseline; gap:8px; margin-top:0.25rem; }
+    .price-current { color:#d32f2f; font-weight:700; font-size:15px; line-height:1.1; }
+    .price-old { color:#999; font-size:12px; text-decoration: line-through; }
+    .discount-badge { background:#f44336; color:#fff; font-weight:700; font-size:11px; border-radius:4px; padding:2px 6px; display:inline-block; margin-top:0.25rem; }
+    .sold-count { display:block; margin-top:0.25rem; font-size:12px; color:#666; }
+    /* Altura fixa para mídia dos cards recomendados */
+    .recom-media { height: 260px; }
+    .rec-card .title { font-size: 13px; font-weight: 600; color: #000; margin-top: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rec-card .price-row { display: flex; align-items: baseline; gap: 8px; margin-top: 0.25rem; }
+    .rec-card .price-current { color: #d32f2f; font-weight: 700; font-size: 15px; line-height: 1.1; }
+    .rec-card .price-old { color: #999; font-size: 12px; text-decoration: line-through; }
+    .rec-card .badges { display: flex; gap: 4px; margin-top: 0.25rem; }
+    /* Selos (cores atualizadas) */
+    .rec-card .badge-red { background: #FFE4EC; color: #E3245B; font-size: 8px; border-radius: 3px; padding: 1px 4px; display: inline-block; }
+    .rec-card .badge-teal { background: #E6FAFA; color: #00A6A6; font-size: 8px; border-radius: 3px; padding: 1px 4px; display: inline-block; }
+    .rec-card .sold { display: block; margin-top: 0.25rem; font-size: 12px; color: #666; text-transform: none; }
+    /* Tamanho fixo da imagem dentro do card recomendado */
+    .recom-img { width: 165px; height: 212px; object-fit: contain; }
+    /* Subtabs (centralizadas, sem toggle) */
+    .tabs { display:flex; gap:24px; align-items:center; justify-content:center; padding:8px 0; border-bottom:1px solid #eee; }
+    .tabs a { font-size:14px; font-weight:600; color:#999; padding:8px 0; position:relative; text-decoration:none; }
+    .tabs a.active { color:#111; }
+    .tabs a.active::after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:#111; border-radius:2px; }
+    .subtabs-wrap { display:flex; align-items:center; gap:16px; padding: 0 12px; }
+    .subtabs-wrap .tabs { flex: 1; }
+    .view-toggle { position: static; margin-left:auto; transform: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; color: #666; font-size: 13px; }
+    .view-toggle svg { width: 16px; height: 16px; }
+    .view-toggle .icon-list { display: none; }
+    /* Alterna ícones conforme o modo */
+    .app[data-view="list"] .view-toggle .icon-grid { display: none; }
+    .app[data-view="list"] .view-toggle .icon-list { display: inline; }
+    /* Regras opcionais para alternar containers (se existirem) */
+    .list-products { display: none; }
+    .app[data-tab="recomendado"] .list-products[data-tab="recomendado"],
+    .app[data-tab="mais-vendidos"] .list-products[data-tab="mais-vendidos"],
+    .app[data-tab="lancamentos"] .list-products[data-tab="lancamentos"] { display: block; }
+    .app[data-view="grid"][data-tab="recomendado"] .list-products[data-tab="recomendado"],
+    .app[data-view="grid"][data-tab="mais-vendidos"] .list-products[data-tab="mais-vendidos"],
+    .app[data-view="grid"][data-tab="lancamentos"] .list-products[data-tab="lancamentos"] {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 0 16px 16px;
+    }
+
+    /* Lista: card horizontal (Recomendado) */
+    .product-card { position:relative; display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid #f0f0f0; background:#fff; }
+    .product-img { width: 90px; height: 90px; border-radius:6px; object-fit: contain; display:block; }
+    .product-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; padding-right:64px; }
+  .product-info .title { font-size:14px; font-weight:700; color:#000; line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .product-info .badges { display:flex; gap:6px; flex-wrap:wrap; }
+    .product-info .badge-red { background:#FFDDE6; color:#E3245B; font-weight:700; font-size:8px; border-radius:3px; padding:1px 4px; }
+    .product-info .badge-blue { background:#E6FAFA; color:#00A6A6; font-weight:700; font-size:8px; border-radius:3px; padding:1px 4px; }
+    .product-info .badge-pink { background:#FFE6F0; color:#E3245B; font-weight:700; font-size:8px; border-radius:3px; padding:1px 4px; }
+    .product-info .rating { display:flex; align-items:center; gap:6px; font-size:12px; color:#555; }
+    .product-info .stars { color:#222; }
+    .product-info .stars .gold { color:#FFD700; }
+    .product-info .sold { color:#666; font-size:12px; }
+    .product-info .price-row { display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+    .product-info .price-current { color:#d32f2f; font-weight:700; font-size:16px; }
+    .product-info .price-old { color:#999; font-size:12px; text-decoration: line-through; margin-top:2px; }
+    .product-actions { position:absolute; right:16px; bottom:16px; display:flex; align-items:center; justify-content:flex-end; }
+    .buy-btn { background:#ff3366; color:#fff; font-weight:700; border-radius:10px; padding:8px 12px; display:inline-flex; align-items:center; gap:6px; }
+
+    .app[data-view="grid"] .list-products[data-tab] .product-card {
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:0;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:#fff;
+      box-shadow:0 1px 4px rgba(0,0,0,0.08);
+      align-items:stretch;
+    }
+    .app[data-view="grid"] .list-products[data-tab] .product-card .product-info,
+    .app[data-view="grid"] .list-products[data-tab] .product-card .product-actions {
+      display:none;
+    }
+    .app[data-view="grid"] .list-products[data-tab] .product-img {
+      width:100%;
+      height:180px;
+      border-radius:10px;
+      object-fit:contain;
+    }
+
+    .share-overlay,
+    .complaint-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; display:none; opacity:0; transition:opacity 0.3s ease-in-out; pointer-events:none; touch-action:none; }
+    .share-overlay.active,
+    .complaint-overlay.active { opacity:1; pointer-events:auto; touch-action:none; }
+    .share-section,
+    .complaint-section { position:fixed; bottom:0; left:0; right:0; background:#fff; border-radius:20px 20px 0 0; padding:20px; transform:translateY(100%); transition:transform 0.3s ease-in-out; z-index:10001; display:none; pointer-events:auto; touch-action:pan-y; }
+    .share-section.active,
+    .complaint-section.active { transform:translateY(0); }
+    .share-header,
+    .complaint-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid #f0f0f0; }
+    .share-title,
+    .complaint-title { font-family:'TikTokFont',sans-serif; font-size:16px; font-weight:600; color:#333; }
+    .share-close,
+    .complaint-close { background:none; border:none; font-size:24px; color:#666; cursor:pointer; padding:5px; }
+    .share-options,
+    .complaint-options { display:flex; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; gap:6px; margin-bottom:20px; }
+    .share-option,
+    .complaint-option { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; padding:10px; border-radius:12px; transition:background-color 0.2s; }
+    .share-option:hover,
+    .complaint-option:hover { background-color:#f8f9fa; }
+    .share-icon,
+    .complaint-icon { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; }
+    .share-icon.whatsapp,
+    .complaint-icon.whatsapp { background:#25D366; }
+    .share-icon.copy { background:#1877F2; }
+    .share-icon.facebook { background:#1877F2; }
+    .share-icon.twitter { background:#1DA1F2; }
+    .share-icon.telegram { background:#0088cc; }
+    .share-label { font-family:'TikTokFont',sans-serif; font-size:12px; color:#666; text-align:center; }
+    .share-cancel { background:#f0f0f0; border:none; padding:15px; border-radius:12px; font-family:'TikTokFont',sans-serif; font-size:16px; font-weight:600; color:#333; width:100%; cursor:pointer; transition:background-color 0.2s; }
+    .share-cancel:hover { background:#e0e0e0; }
+   </style>
+   <!-- CSS de tema apenas para a página Loja (adaptado do exemplo) -->
+   <style id="loja-page-css">
+    :root {
+      --font-size: 16px;
+      --background: #ffffff;
+      --foreground: oklch(0.145 0 0);
+      --card: #ffffff;
+      --card-foreground: oklch(0.145 0 0);
+      --popover: oklch(1 0 0);
+      --popover-foreground: oklch(0.145 0 0);
+      --primary: #030213;
+      --primary-foreground: oklch(1 0 0);
+      --secondary: oklch(0.95 0.0058 264.53);
+      --secondary-foreground: #030213;
+      --muted: #ececf0;
+      --muted-foreground: #717182;
+      --accent: #e9ebef;
+      --accent-foreground: #030213;
+      --destructive: #d4183d;
+      --destructive-foreground: #ffffff;
+      --border: rgba(0, 0, 0, 0.1);
+      --input: transparent;
+      --input-background: #f3f3f5;
+      --switch-background: #cbced4;
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --ring: oklch(0.708 0 0);
+      --chart-1: oklch(0.646 0.222 41.116);
+      --chart-2: oklch(0.6 0.118 184.704);
+      --chart-3: oklch(0.398 0.07 227.392);
+      --chart-4: oklch(0.828 0.189 84.429);
+      --chart-5: oklch(0.769 0.188 70.08);
+      --radius: 0.625rem;
+      --sidebar: oklch(0.985 0 0);
+      --sidebar-foreground: oklch(0.145 0 0);
+      --sidebar-primary: #030213;
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.97 0 0);
+      --sidebar-accent-foreground: oklch(0.205 0 0);
+      --sidebar-border: oklch(0.922 0 0);
+      --sidebar-ring: oklch(0.708 0 0);
+    }
+    .dark {
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.145 0 0);
+      --card-foreground: oklch(0.985 0 0);
+      --popover: oklch(0.145 0 0);
+      --popover-foreground: oklch(0.985 0 0);
+      --primary: oklch(0.985 0 0);
+      --primary-foreground: oklch(0.205 0 0);
+      --secondary: oklch(0.269 0 0);
+      --secondary-foreground: oklch(0.985 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --accent: oklch(0.269 0 0);
+      --accent-foreground: oklch(0.985 0 0);
+      --destructive: oklch(0.396 0.141 25.723);
+      --destructive-foreground: oklch(0.637 0.237 25.331);
+      --border: oklch(0.269 0 0);
+      --input: oklch(0.269 0 0);
+      --ring: oklch(0.439 0 0);
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --chart-1: oklch(0.488 0.243 264.376);
+      --chart-2: oklch(0.696 0.17 162.48);
+      --chart-3: oklch(0.769 0.188 70.08);
+      --chart-4: oklch(0.627 0.265 303.9);
+      --chart-5: oklch(0.645 0.246 16.439);
+      --sidebar: oklch(0.205 0 0);
+      --sidebar-foreground: oklch(0.985 0 0);
+      --sidebar-primary: oklch(0.488 0.243 264.376);
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.269 0 0);
+      --sidebar-accent-foreground: oklch(0.985 0 0);
+      --sidebar-border: oklch(0.269 0 0);
+      --sidebar-ring: oklch(0.439 0 0);
+    }
+    html { font-size: var(--font-size); }
+   </style>
+  </meta>
+ </head>
+ <body>
+  <div class="app">
+   <!-- Top bar with back and search -->
+   <div class="sticky top-0 z-20 bg-white shadow-hairline">
+    <div class="flex items-center gap-3 px-4 py-3">
+     <a aria-label="Voltar para a página inicial" class="text-2xl" href="index.html">
+      ‹
+     </a>
+     <div class="flex-1">
+      <label class="search-wrapper" for="product-search">
+       <span class="sr-only">
+        Pesquisar produtos
+       </span>
+       <span aria-hidden="true" class="search-icon">
+        🔍
+       </span>
+       <input autocomplete="off" enterkeyhint="search" id="product-search" placeholder="Pesquisar produtos" type="search"/>
+      </label>
+     </div>
+     <button aria-label="Compartilhar" class="text-2xl" onclick="handleOpenShareSection()" type="button">
+      ↗︎
+     </button>
+     <a aria-label="Ir para o carrinho" class="relative text-2xl" href="./carrinho/">
+      🛒
+      <span class="cart-count-badge" id="cart-count-header">
+       0
+      </span>
+     </a>
+     <button aria-label="Mais opções" class="text-2xl" onclick="handleOpenComplaintSection()" type="button">
+      ⋯
+     </button>
+    </div>
+   </div>
+   <!-- Header loja -->
+   <div class="px-4 pt-2 pb-4">
+    <div class="flex items-center gap-3">
+     <div class="relative">
+      <div class="w-16 h-16 rounded-full border-2 border-pink-500 p-0.5">
+       <img alt="logo loja" class="w-full h-full rounded-full object-cover" src="../images/logotipo.png"/>
+      </div>
+      <div class="absolute -bottom-1 -right-1 bg-pink-500 text-white text-[10px] rounded-full px-1.5 py-0.5">
+       📈
+      </div>
+     </div>
+     <div class="flex-1">
+      <div class="font-semibold text-[18px]">
+       Aura Parfum
+      </div>
+      <div class="text-gray-500 text-sm">
+       51.8K vendido(s)
+      </div>
+     </div>
+     <div class="flex flex-col gap-2 items-end">
+      <button aria-pressed="false" class="btn btn-follow" type="button">
+       Seguir
+      </button>
+      <button class="btn btn-message" onclick="window.location.href='../chat/index1.html'">
+       Mensagem
+      </button>
+     </div>
+    </div>
+    <div class="mt-4 flex items-center gap-2 text-pink-500 text-sm">
+     <div>
+      📅
+     </div>
+     <div class="font-semibold">
+      Evento LIVE: 10 de nov, 13:30
+     </div>
+    </div>
+    <div class="cupom mt-3 bg-[#f6fbfb] rounded-xl px-4 py-[0.4375rem] flex items-center justify-between">
+     <div>
+      <div class="font-semibold text-gray-800 text-sm">
+       Cupom de envio
+      </div>
+      <div class="text-gray-500 text-sm -mt-0.5">
+       em pedidos acima de
+       <br/>
+       R$ 29
+      </div>
+     </div>
+     <button class="bg-teal-500 text-white font-semibold rounded-lg px-[0.9rem] py-[0.315rem] text-[0.79rem]">
+      Resgatar
+     </button>
+    </div>
+   </div>
+   <!-- Tabs -->
+   <div class="flex text-gray-500 text-[15px] bg-white shadow-hairline">
+    <a class="flex-1 text-center py-3" href="index.html">
+     Página inicial
+    </a>
+    <a class="flex-1 text-center py-3 tab-active" href="produtos.html">
+     Produtos
+    </a>
+    <a class="flex-1 text-center py-3" href="categorias.html">
+     Categorias
+    </a>
+   </div>
+   <!-- Subtabs de navegação da seção com toggle à direita -->
+   <div class="subtabs-wrap">
+    <nav class="tabs">
+     <a class="active" href="#recomendado">
+      Recomendado
+     </a>
+     <a href="#mais-vendidos">
+      Mais vendidos
+     </a>
+     <a href="#lancamentos">
+      Lançamentos
+     </a>
+    </nav>
+    <button aria-label="Alternar visualização" class="view-toggle" type="button">
+     <svg aria-hidden="true" class="icon-grid" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+      <rect height="7" width="7" x="3" y="3">
+      </rect>
+      <rect height="7" width="7" x="14" y="3">
+      </rect>
+      <rect height="7" width="7" x="3" y="14">
+      </rect>
+      <rect height="7" width="7" x="14" y="14">
+      </rect>
+     </svg>
+     <svg aria-hidden="true" class="icon-list" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+      <line x1="8" x2="21" y1="6" y2="6">
+      </line>
+      <line x1="8" x2="21" y1="12" y2="12">
+      </line>
+      <line x1="8" x2="21" y1="18" y2="18">
+      </line>
+      <circle cx="4" cy="6" r="1">
+      </circle>
+      <circle cx="4" cy="12" r="1">
+      </circle>
+      <circle cx="4" cy="18" r="1">
+      </circle>
+     </svg>
+     <span class="label">
+      Card
+     </span>
+    </button>
+   </div>
+   <!-- Mais vendidos: lista -->
+   <section aria-label="Mais vendidos (lista)" class="list-products" data-tab="mais-vendidos">
+    <article class="product-card" data-product-id="recom-1">
+     <img alt="Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml" class="product-img" src="../images/4c7bd230a2e742f8a82aa5d96866ace8~tplv-aphluv4xwc-resize-jpeg_350_350.jpeg"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,97
+       </span>
+       <span class="price-old">
+        R$ 249,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-4">
+     <img alt="Hidratante Calming Cream" class="product-img" src="../images/Generated Image September 15, 2025 - 3_03PM.png"/>
+     <div class="product-info">
+      <p class="title">
+       Hidratante Calming Cream
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,97
+       </span>
+       <span class="price-old">
+        R$ 249,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-8">
+     <img alt="Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml" class="product-img" src="../images/vs8.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 29,98
+       </span>
+       <span class="price-old">
+        R$ 149,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-10">
+     <img alt="Creme Hidratante Temptation Victoria’s Secret 236ml" class="product-img" src="../images/vs10.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Temptation Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 29,98
+       </span>
+       <span class="price-old">
+        R$ 149,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="bare-vanilla">
+     <img alt="Body Splash Victoria's Secret Bare Vanilla 250ml" class="product-img" src="../images/db5.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Bare Vanilla 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="love-spell">
+     <img alt="Body Splash Victoria's Secret Love Spell 250ml" class="product-img" src="../images/bd3.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Love Spell 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="pure-seduction">
+     <img alt="Body Splash Victoria's Secret Pure Seduction 250ml" class="product-img" src="../images/bd6.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Pure Seduction 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+   </section>
+   <section aria-label="Produtos (lista)" class="list-products" data-tab="recomendado">
+    <!-- Principais -->
+    <article class="product-card" data-product-id="recom-1">
+     <img alt="Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml" class="product-img" src="../images/4c7bd230a2e742f8a82aa5d96866ace8~tplv-aphluv4xwc-resize-jpeg_350_350.jpeg"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 52,62
+       </span>
+       <span class="price-old">
+        R$ 197,46
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=kit-coconut-passion-vs">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="kit-bare-vanilla-vs">
+     <img alt="Kit Body Splash + Creme Hidratante Bare Vanilla Aura Parfum 236ml+250ml" class="product-img" src="../images/903dde3edca44f789847b972949bc7d2~tplv-aphluv4xwc-resize-jpeg_350_350.png"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Bare Vanilla Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,14
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=kit-bare-vanilla-vs">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="kit-pure-seduction-vs">
+     <img alt="Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml" class="product-img" src="../images/Gemini_Generated_Image_3y6npe3y6npe3y6n (1).jpeg"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 71,99
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=kit-pure-seduction-vs">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <!-- Recomendados -->
+    <article class="product-card" data-product-id="recom-1">
+     <img alt="Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml" class="product-img" src="../images/4c7bd230a2e742f8a82aa5d96866ace8~tplv-aphluv4xwc-resize-jpeg_350_350.jpeg"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,97
+       </span>
+       <span class="price-old">
+        R$ 249,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-1">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-2">
+     <img alt="Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml" class="product-img" src="../images/15abc260-59f5-4a6b-aba2-ff035b06c77c.jpeg"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 51,72
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-2">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-3">
+     <img alt="Kit Victoria Secrets" class="product-img" src="../images/Generated Image September 15, 2025 - 3_01PM (1).png"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Victoria Secrets
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 71,99
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-3">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-4">
+     <img alt="Hidratante Calming Cream" class="product-img" src="../images/Generated Image September 15, 2025 - 3_03PM.png"/>
+     <div class="product-info">
+      <p class="title">
+       Hidratante Calming Cream
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 47,36
+       </span>
+       <span class="price-old">
+        R$ 52,62
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-4">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-5">
+     <img alt="Kit Victoria Secrets" class="product-img" src="../images/vs5.png"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Victoria Secrets
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 85,26
+       </span>
+       <span class="price-old">
+        R$ 94,73
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-5">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-6">
+     <img alt="Ácido Glicólico 30g" class="product-img" src="../images/vs6.png"/>
+     <div class="product-info">
+      <p class="title">
+       Ácido Glicólico 30g
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 51,72
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-6">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-7">
+     <img alt="Kit Victoria Secrets" class="product-img" src="../images/vs7.png"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Victoria Secrets
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 71,99
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-7">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-8">
+     <img alt="Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml" class="product-img" src="../images/vs8.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 47,36
+       </span>
+       <span class="price-old">
+        R$ 52,62
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-8">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-9">
+     <img alt="Kit Victoria Secrets" class="product-img" src="../images/vs9.png"/>
+     <div class="product-info">
+      <p class="title">
+       Kit Victoria Secrets
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 85,26
+       </span>
+       <span class="price-old">
+        R$ 94,73
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-9">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-10">
+     <img alt="Creme Hidratante Temptation Victoria’s Secret 236ml" class="product-img" src="../images/vs10.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Temptation Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 10% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 51,72
+       </span>
+       <span class="price-old">
+        R$ 84,20
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-10">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+   </section>
+   <!-- Lançamentos: lista -->
+   <section aria-label="Lançamentos (lista)" class="list-products" data-tab="lancamentos">
+    <article class="product-card" data-product-id="bare-vanilla">
+     <img alt="Body Splash Victoria's Secret Bare Vanilla 250ml" class="product-img" src="../images/db5.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Bare Vanilla 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=kit-coconut-passion-vs">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="pure-seduction">
+     <img alt="Body Splash Victoria's Secret Pure Seduction 250ml" class="product-img" src="../images/bd6.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Pure Seduction 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-2">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-4">
+     <img alt="Hidratante Calming Cream" class="product-img" src="../images/Generated Image September 15, 2025 - 3_03PM.png"/>
+     <div class="product-info">
+      <p class="title">
+       Hidratante Calming Cream
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,97
+       </span>
+       <span class="price-old">
+        R$ 249,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=kit-pure-seduction-vs">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="love-spell">
+     <img alt="Body Splash Victoria's Secret Love Spell 250ml" class="product-img" src="../images/bd3.png"/>
+     <div class="product-info">
+      <p class="title">
+       Body Splash Victoria's Secret Love Spell 250ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 35,97
+       </span>
+       <span class="price-old">
+        R$ 179,83
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <a class="btn-buy" href="../certo.html?id=recom-3">
+        Comprar
+       </a>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-4">
+     <img alt="Hidratante Calming Cream" class="product-img" src="../images/Generated Image September 15, 2025 - 3_03PM.png"/>
+     <div class="product-info">
+      <p class="title">
+       Hidratante Calming Cream
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 49,97
+       </span>
+       <span class="price-old">
+        R$ 249,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-8">
+     <img alt="Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml" class="product-img" src="../images/vs8.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Coconut Milk &amp; Rose Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 29,98
+       </span>
+       <span class="price-old">
+        R$ 149,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+    <article class="product-card" data-product-id="recom-10">
+     <img alt="Creme Hidratante Temptation Victoria’s Secret 236ml" class="product-img" src="../images/vs10.png"/>
+     <div class="product-info">
+      <p class="title">
+       Creme Hidratante Temptation Victoria’s Secret 236ml
+      </p>
+      <div class="badges">
+       <span class="badge-red" data-auto-discount="" data-prefix="🎟️">
+        🎟️ 80% OFF
+       </span>
+       <span class="badge-blue">
+        Frete grátis
+       </span>
+      </div>
+      <div class="rating">
+       <span class="stars">
+        <span class="gold">
+         ★★★★
+        </span>
+        ☆
+       </span>
+       <span>
+        4.8
+       </span>
+       <span>
+        |
+       </span>
+       <span class="sold">
+        22.1K vendido(s)
+       </span>
+      </div>
+      <div class="price-row">
+       <span class="price-current">
+        R$ 29,98
+       </span>
+       <span class="price-old">
+        R$ 149,97
+       </span>
+      </div>
+     </div>
+     <div class="product-actions">
+      <div class="buy-group">
+       <button aria-label="Adicionar ao carrinho" class="btn-cart" type="button">
+        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+         <circle cx="9" cy="21" r="1">
+         </circle>
+         <circle cx="20" cy="21" r="1">
+         </circle>
+         <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 1.99-1.72L23 6H6">
+         </path>
+        </svg>
+       </button>
+       <button class="btn-buy" type="button">
+        Comprar
+       </button>
+      </div>
+     </div>
+    </article>
+   </section>
+   <div aria-live="polite" id="search-empty" role="status">
+    Nenhum produto encontrado para sua busca.
+   </div>
+   <div class="share-overlay" id="share-overlay" onclick="closeShareSection()">
+   </div>
+   <div class="share-section" id="share-section">
+    <div class="share-header">
+     <span class="share-title">
+      Compartilhar
+     </span>
+     <button class="share-close" onclick="closeShareSection()" type="button">
+      ×
+     </button>
+    </div>
+    <div class="share-options">
+     <div class="share-option" onclick="copyLink()">
+      <div class="share-icon copy">
+       🔗
+      </div>
+      <span class="share-label" id="copy-link-btn">
+       Copiar Link
+      </span>
+     </div>
+     <div class="share-option" onclick="copyLink()">
+      <span class="share-icon whatsapp">
+       💬
+      </span>
+      <span class="share-label">
+       WhatsApp
+      </span>
+     </div>
+     <div class="share-option" onclick="copyLink()">
+      <span class="share-icon facebook">
+       f
+      </span>
+      <span class="share-label">
+       Facebook
+      </span>
+     </div>
+     <div class="share-option" onclick="copyLink()">
+      <span class="share-icon telegram">
+       ✈️
+      </span>
+      <span class="share-label">
+       Telegram
+      </span>
+     </div>
+    </div>
+    <button class="share-cancel" onclick="closeShareSection()" type="button">
+     Cancelar
+    </button>
+   </div>
+   <div class="complaint-overlay" id="complaint-overlay" onclick="closeComplaintSection()">
+   </div>
+   <div class="complaint-section" id="complaint-section">
+    <div class="complaint-options">
+     <div class="complaint-option" onclick="window.location.href='../denuncia'">
+      <span class="complaint-icon whatsapp">
+       !
+      </span>
+      <span class="share-label">
+       Registrar denúncia
+      </span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="../js/product-linker.js">
+  </script>
+  <script>
+   (function(){
+      const app = document.querySelector('.app');
+      const btn = document.querySelector('.view-toggle');
+      const tabs = document.querySelectorAll('.tabs a');
+      if (!app || !btn) return;
+      // modo inicial: lista
+      app.setAttribute('data-view','list');
+      const label = btn.querySelector('.label');
+      if (label) label.textContent = 'Lista';
+      btn.addEventListener('click', function(){
+        const isList = app.getAttribute('data-view') === 'list';
+        const next = isList ? 'grid' : 'list';
+        app.setAttribute('data-view', next);
+        if (label) label.textContent = next === 'list' ? 'Lista' : 'Card';
+      });
+
+      function syncTabFromHash(){
+        const h = (location.hash || '#recomendado').toLowerCase();
+        tabs.forEach(a => a.classList.toggle('active', a.getAttribute('href').toLowerCase() === h));
+        app.setAttribute('data-tab', h.replace('#',''));
+      }
+      window.addEventListener('hashchange', syncTabFromHash);
+      syncTabFromHash();
+    })();
+    const FOLLOW_KEY = 'aura-following';
+    const CART_KEY = 'tiktokShopCart';
+
+    function applyFollowState(following) {
+      document.querySelectorAll('.btn-follow').forEach(function(btn){
+        btn.classList.toggle('is-following', following);
+        btn.textContent = following ? 'Seguindo' : 'Seguir';
+        btn.setAttribute('aria-pressed', String(following));
+      });
+    }
+
+    function getCart() {
+      const stored = localStorage.getItem(CART_KEY);
+      try { return stored ? JSON.parse(stored) : []; } catch { return []; }
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      document.querySelectorAll('#cart-count-header').forEach(function(el){
+        el.textContent = totalItems;
+      });
+    }
+
+    function addToCart(productData) {
+      const cart = getCart();
+      const existingItem = cart.find(item => item.id === productData.id);
+      
+      if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 1) + 1;
+      } else {
+        cart.push({
+          id: productData.id,
+          name: productData.name,
+          price: productData.price,
+          priceLabel: productData.priceLabel, // Formatação original do preço
+          oldPrice: productData.oldPrice,
+          oldPriceLabel: productData.oldPriceLabel, // Formatação original do preço taxado
+          image: productData.image,
+          quantity: 1
+        });
+      }
+      
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartCount();
+      
+      // Mostrar feedback visual
+      const button = event.target.closest('.btn-cart');
+      if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = '✓';
+        button.style.backgroundColor = '#4CAF50';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.backgroundColor = '';
+        }, 1000);
+      }
+    }
+
+    function handleOpenShareSection(){
+      const overlay = document.getElementById('share-overlay');
+      const section = document.getElementById('share-section');
+      if (!overlay || !section) return;
+      overlay.style.display = 'block';
+      section.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      requestAnimationFrame(function(){
+        overlay.classList.add('active');
+        section.classList.add('active');
+      });
+    }
+
+    function closeShareSection(){
+      const overlay = document.getElementById('share-overlay');
+      const section = document.getElementById('share-section');
+      if (!overlay || !section) return;
+      overlay.classList.remove('active');
+      section.classList.remove('active');
+      setTimeout(function(){
+        overlay.style.display = 'none';
+        section.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }, 300);
+    }
+
+    function handleOpenComplaintSection(){
+      const overlay = document.getElementById('complaint-overlay');
+      const section = document.getElementById('complaint-section');
+      if (!overlay || !section) return;
+      overlay.style.display = 'block';
+      section.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      requestAnimationFrame(function(){
+        overlay.classList.add('active');
+        section.classList.add('active');
+      });
+    }
+
+    function closeComplaintSection(){
+      const overlay = document.getElementById('complaint-overlay');
+      const section = document.getElementById('complaint-section');
+      if (!overlay || !section) return;
+      overlay.classList.remove('active');
+      section.classList.remove('active');
+      setTimeout(function(){
+        overlay.style.display = 'none';
+        section.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }, 300);
+    }
+
+    function copyLink(){
+      const url = window.location.href;
+      const fallback = function(){
+        const temp = document.createElement('input');
+        temp.value = url;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        alert('Link copiado para a área de transferência!');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function(){
+          const copyBtn = document.getElementById('copy-link-btn');
+          if (copyBtn) {
+            const original = copyBtn.textContent;
+            copyBtn.textContent = 'Link copiado!';
+            setTimeout(function(){ copyBtn.textContent = original; }, 1500);
+          }
+          closeShareSection();
+        }).catch(function(){ fallback(); closeShareSection(); });
+      } else {
+        fallback();
+        closeShareSection();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      const appEl = document.querySelector('.app');
+      const searchInput = document.getElementById('product-search');
+      const searchEmpty = document.getElementById('search-empty');
+      const productSections = Array.from(document.querySelectorAll('.list-products'));
+
+      if (searchEmpty && !searchEmpty.dataset.defaultMessage) {
+        searchEmpty.dataset.defaultMessage = searchEmpty.textContent;
+      }
+
+      const normalizeText = (value) => {
+        if (value == null) return '';
+        try {
+          return value
+            .toString()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+        } catch (error) {
+          return value.toString().toLowerCase().trim();
+        }
+      };
+
+      productSections.forEach((section) => {
+        section.querySelectorAll('.product-card').forEach((card) => {
+          if (card.dataset.searchTitle) return;
+          const titleText = card.querySelector('.title')?.textContent?.trim() || '';
+          card.dataset.searchTitle = normalizeText(titleText);
+        });
+      });
+
+      const runSearch = (term) => {
+        if (!appEl) return;
+        const normalizedTerm = normalizeText(term);
+        const hasTerm = normalizedTerm.length > 0;
+        let totalVisible = 0;
+
+        productSections.forEach((section) => {
+          let visibleInSection = 0;
+          section.querySelectorAll('.product-card').forEach((card) => {
+            const searchTitle = card.dataset.searchTitle || '';
+            const matches = !hasTerm || searchTitle.includes(normalizedTerm);
+            card.hidden = !matches;
+            if (matches) {
+              visibleInSection += 1;
+            }
+          });
+          if (hasTerm) {
+            if (visibleInSection) {
+              section.dataset.hasResults = 'true';
+            } else {
+              section.removeAttribute('data-has-results');
+            }
+          } else {
+            section.removeAttribute('data-has-results');
+          }
+          totalVisible += visibleInSection;
+        });
+
+        if (hasTerm) {
+          appEl.classList.add('searching');
+          if (searchEmpty) {
+            if (totalVisible) {
+              searchEmpty.style.display = 'none';
+              if (searchEmpty.dataset.defaultMessage) {
+                searchEmpty.textContent = searchEmpty.dataset.defaultMessage;
+              }
+            } else {
+              const defaultText = searchEmpty.dataset.defaultMessage || searchEmpty.textContent;
+              searchEmpty.dataset.defaultMessage = defaultText;
+              const readableTerm = (term || '').toString().trim();
+              searchEmpty.textContent = readableTerm
+                ? `Nenhum produto encontrado para "${readableTerm}".`
+                : defaultText;
+              searchEmpty.style.display = 'block';
+            }
+          }
+        } else {
+          appEl.classList.remove('searching');
+          productSections.forEach((section) => section.removeAttribute('data-has-results'));
+          if (searchEmpty) {
+            if (searchEmpty.dataset.defaultMessage) {
+              searchEmpty.textContent = searchEmpty.dataset.defaultMessage;
+            }
+            searchEmpty.style.display = 'none';
+          }
+        }
+      };
+
+      if (searchInput) {
+        const params = new URLSearchParams(window.location.search);
+        const initialQuery = params.get('q');
+        if (initialQuery) {
+          searchInput.value = initialQuery;
+        }
+        const handleSearchEvent = (event) => {
+          runSearch(event.target.value);
+        };
+        searchInput.addEventListener('input', handleSearchEvent);
+        searchInput.addEventListener('search', handleSearchEvent);
+
+        runSearch(searchInput.value);
+      }
+
+      let following = localStorage.getItem(FOLLOW_KEY) === 'true';
+      applyFollowState(following);
+      document.querySelectorAll('.btn-follow').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          following = !btn.classList.contains('is-following');
+          localStorage.setItem(FOLLOW_KEY, following);
+          applyFollowState(following);
+        });
+      });
+
+      // Adicionar event listeners aos botões de carrinho
+      document.querySelectorAll('.btn-cart').forEach(function(btn, index){
+        btn.addEventListener('click', function(event){
+          const productCard = btn.closest('.product-card');
+          if (!productCard) return;
+          
+          const title = productCard.querySelector('.title')?.textContent?.trim() || '';
+          const priceCurrentEl = productCard.querySelector('.price-current');
+          const priceOldEl = productCard.querySelector('.price-old');
+          const imageEl = productCard.querySelector('.product-img');
+          
+          // Extrair preços mantendo formatação original
+          const priceCurrentText = priceCurrentEl?.textContent?.trim() || '';
+          const priceOldText = priceOldEl?.textContent?.trim() || '';
+          
+          // Converter para números para cálculos
+          const currentPrice = parseFloat(priceCurrentText.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+          const oldPrice = parseFloat(priceOldText.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+          
+          const productData = {
+            id: 'produto-' + index + '-' + Date.now(),
+            name: title,
+            price: currentPrice,
+            priceLabel: priceCurrentText, // Manter formatação original
+            oldPrice: oldPrice > currentPrice ? oldPrice : null,
+            oldPriceLabel: oldPrice > currentPrice ? priceOldText : null, // Manter formatação original
+            image: imageEl?.src || '../images/ndaq.png'
+          };
+          
+          addToCart(productData);
+        });
+      });
+
+      updateCartCount();
+      setInterval(updateCartCount, 1000);
+      window.addEventListener('focus', updateCartCount);
+      window.addEventListener('pageshow', updateCartCount);
+    });
+  </script>
+ </body>
+</html>

@@ -1,0 +1,1967 @@
+﻿<!DOCTYPE html>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Canetinhas</title>
+
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* TikTok Font Faces */
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('fonts/TikTokFont-Regular.woff2') format('woff2'),
+                url('fonts/TikTokFont-Regular.woff') format('woff'),
+                url('fonts/TikTokFont-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('fonts/TikTokFont-Semibold.woff2') format('woff2'),
+                url('fonts/TikTokFont-Semibold.woff') format('woff'),
+                url('fonts/TikTokFont-Semibold.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('fonts/TikTokFont-Bold.woff2') format('woff2'),
+                url('fonts/TikTokFont-Bold.woff') format('woff'),
+                url('fonts/TikTokFont-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TikTokDisplayFont';
+            src: url('fonts/TikTokDisplayFont-Regular.woff2') format('woff2'),
+                url('fonts/TikTokDisplayFont-Regular.woff') format('woff'),
+                url('fonts/TikTokDisplayFont-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TikTokDisplayFont';
+            src: url('fonts/TikTokDisplayFont-Semibold.woff2') format('woff2'),
+                url('fonts/TikTokDisplayFont-Semibold.woff') format('woff'),
+                url('fonts/TikTokDisplayFont-Semibold.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'TikTokDisplayFont';
+            src: url('fonts/TikTokDisplayFont-Bold.woff2') format('woff2'),
+                url('fonts/TikTokDisplayFont-Bold.woff') format('woff'),
+                url('fonts/TikTokDisplayFont-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'TikTokFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 100vw;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .header-left {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            font-size: 24px;
+        }
+
+        /* Product Image Section */
+        .product-images {
+            position: relative;
+            background: white;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+            background: #f8f9fa;
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .image-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .image-loading.show {
+            display: block;
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-family: 'TikTokFont', sans-serif;
+        }
+
+        .image-nav-buttons {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 12px;
+            pointer-events: none;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            transition: all 0.2s ease-in-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .image-thumbnails {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .image-thumbnails::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumbnail {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .thumbnail.active {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 1px rgba(0, 212, 170, 0.3);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .image-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dot.active {
+            background: #00d4aa;
+            transform: scale(1.2);
+        }
+
+        .dot:hover {
+            background: rgba(0, 212, 170, 0.7);
+        }
+
+        /* Price Section */
+        .price-section {
+            padding: 16px;
+            background: linear-gradient(90deg, #ff6b35 0%, #ff8c42 100%);
+            color: white;
+        }
+
+        .price-main {
+            font-family: 'TikTokDisplayFont', 'TikTokFont', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .price-savings {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .price-info {
+            flex: 1;
+        }
+
+        .flash-deal-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .flash-deal-text {
+            font-family: 'TikTokFont', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            text-align: right;
+        }
+
+        /* Discount Banner */
+        .discount-banner {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .discount-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .discount-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .discount-text {
+            color: #ff6b6b;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Product Info */
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-title {
+            font-family: 'TikTokDisplayFont', 'TikTokFont', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 16px;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Shipping Info */
+        .shipping-info {
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .shipping-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+        }
+
+        .shipping-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .shipping-details {
+            flex: 1;
+        }
+
+        .shipping-free {
+            color: #00d4aa;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .shipping-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .shipping-fee {
+            color: #999;
+            font-size: 14px;
+            text-decoration: line-through;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 57px;
+            z-index: 99;
+        }
+
+        .tab {
+            font-family: 'TikTokFont', sans-serif;
+            flex: 1;
+            padding: 16px 8px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: #333;
+            font-weight: 600;
+            border-bottom-color: #333;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 16px;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Options Section */
+        .options-section {
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-family: 'TikTokFont', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            aspect-ratio: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .option-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .option-item.available {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+        }
+
+        .option-item.sold-out {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .option-item.sold-out img {
+            filter: grayscale(100%);
+        }
+
+        .sold-out-badge {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff2d55;
+            color: white;
+            font-size: 8px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-family: 'TikTokFont', sans-serif;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            padding: 16px;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .reviews-title {
+            font-family: 'TikTokFont', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .reviews-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .rating-big {
+            font-family: 'TikTokDisplayFont', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .review-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .review-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .review-stars {
+            color: #ffc107;
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .review-variant {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .review-text {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .review-images {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .review-image {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .review-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .review-image img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            padding: 12px 16px;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            color: #666;
+        }
+
+        .add-cart-btn {
+            font-family: 'TikTokFont', sans-serif;
+            flex: 1;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            padding: 12px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .buy-btn {
+            font-family: 'TikTokFont', sans-serif;
+            flex: 1;
+            background: #ff2d55;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: white;
+            padding: 24px 16px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .tiktok-shop-logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .footer-sections {
+            margin-bottom: 24px;
+        }
+
+        .footer-section {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 0;
+        }
+
+        .footer-header {
+            font-family: 'TikTokFont', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .chevron {
+            color: #666;
+            font-size: 18px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .footer-benefits {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .benefit-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .footer-apps {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .app-download img {
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .footer-top-button {
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .top-button:hover {
+            background: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        /* Modal de tela cheia */
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-modal.active {
+            opacity: 1;
+        }
+
+        .fullscreen-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close-fullscreen {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .nav-fullscreen {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prev-fullscreen {
+            left: 20px;
+        }
+
+        .next-fullscreen {
+            right: 20px;
+        }
+
+        .share-overlay,
+        .complaint-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+            touch-action: none;
+        }
+
+        .share-overlay.active,
+        .complaint-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .share-section,
+        .complaint-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 10001;
+            display: none;
+            pointer-events: auto;
+            touch-action: pan-y;
+        }
+
+        .share-section.active,
+        .complaint-section.active {
+            transform: translateY(0);
+        }
+
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .share-title,
+        .complaint-title {
+            font-family: 'TikTokFont', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .share-close,
+        .complaint-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .share-options,
+        .complaint-options {
+            display: flex;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            scrollbar-width: none;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .share-option,
+        .complaint-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .share-option:hover,
+        .complaint-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .share-icon,
+        .complaint-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .share-icon.whatsapp,
+        .complaint-icon.whatsapp {
+            background: #25D366;
+        }
+
+        .share-icon.instagram img {
+            transform: scale(2);
+        }
+
+        .share-icon.copy {
+            background: #1877F2;
+        }
+
+        .share-icon.facebook {
+            background: #1877F2;
+        }
+
+        .share-icon.twitter {
+            background: #1DA1F2;
+        }
+
+        .share-icon.telegram {
+            background: #0088cc;
+        }
+
+        .share-label {
+            font-family: 'TikTokFont', sans-serif;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .share-cancel {
+            background: #f0f0f0;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'TikTokFont', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .share-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            .price-main {
+                font-size: 22px;
+            }
+
+            .price-main span {
+                font-size: 18px !important;
+            }
+
+            .discount-badge {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+
+            .discount-text {
+                font-size: 11px;
+            }
+
+            .product-title {
+                font-size: 16px;
+            }
+
+            .footer-benefits {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .footer-apps {
+                flex-direction: column;
+            }
+        }
+
+        /* iPhone specific adjustments */
+        @media (max-width: 390px) {
+            .price-main {
+                font-size: 20px;
+            }
+
+            .price-main span {
+                font-size: 16px !important;
+                margin-right: 4px !important;
+            }
+
+            .discount-content {
+                gap: 6px;
+            }
+
+            .discount-badge {
+                font-size: 10px;
+                padding: 2px 5px;
+            }
+
+            .discount-text {
+                font-size: 10px;
+            }
+        }
+
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #sticky-tabs {
+            transition: all 0.3s ease;
+        }
+
+        /* 🔼 FIM DO NOVO CSS 🔼 */
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header id="main-header" class="header">
+            <div class="header-left"></div>
+            <div class="header-right">
+                <button onclick="handleOpenShareSection()">↗</button>
+                <button onclick="window.location.href='././carrinho/'">🛒</button>
+                <button onclick="handleOpenComplaintSection()">⋯</button>
+            </div>
+        </header>
+        <!-- Product Images -->
+        <section id="visao-geral-section" class="product-images">
+            <div class="image-container">
+                <img alt="Kit 262 Canetinhas Coloridas" class="product-main-image" id="main-product-image"
+                    src="images/test.png">
+                <div class="image-loading" id="image-loading">Carregando...</div>
+                <div class="image-counter" id="image-counter"></div>
+               
+            </div>
+            <div class="image-dots" id="image-dots">
+                <!-- Pontos indicadores serão gerados pelo JavaScript -->
+            </div>
+            <div class="image-thumbnails" id="image-thumbnails">
+                <!-- Thumbnails serão gerados pelo JavaScript -->
+            </div>
+        </section>
+        <!-- Price Section -->
+        <section class="price-section">
+            <div class="price-row">
+                <div class="price-info">
+                    <div class="price-main">
+                        <span
+                            style="text-decoration: line-through; color: #ffccaa; font-size: 20px; margin-right: 6px;">R$
+                            179,83</span>
+                        R$ 35,97
+                    </div>
+                    <div class="price-savings">Economize até 80%</div>
+                </div>
+                <div class="flash-deal-container">
+                    <div class="flash-deal-text">
+                        <svg fill="white" height="16" viewbox="0 0 24 24" width="16">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        <span>Oferta Relâmpago</span>
+                    </div>
+                    <div class="countdown">Termina em 00:05:00</div>
+                </div>
+            </div>
+        </section>
+        <!-- Discount Banner -->
+        <section class="discount-banner">
+            <div class="discount-content">
+                <span class="discount-badge">Desconto de 30%</span>
+                <span class="discount-text">Compre R$ 100,00, economize R$ 1,00</span>
+            </div>
+            <span>›</span>
+        </section>
+        <!-- Product Info -->
+        <section class="product-info">
+            <h1 class="product-title">Body Splash Victoria´s Secret Bare Vanilla 250ml</h1>
+            <div class="rating-section">
+                <span class="stars">⭐</span>
+                <span class="rating-text">4.7 (204) 4473 vendidos</span>
+            </div>
+        </section>
+        <!-- Shipping Info -->
+        <section class="shipping-info">
+            <div class="shipping-row">
+                <svg class="shipping-icon" fill="none" height="20" viewbox="0 0 24 24" width="20">
+                    <path
+                        d="M16 3H5C3.89543 3 3 3.89543 3 5V15C3 16.1046 3.89543 17 5 17H16M16 3L19 6V17H16M16 3V6H19M16 17H19"
+                        stroke="#00d4aa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <circle cx="7.5" cy="19.5" r="1.5" stroke="#00d4aa" stroke-width="2"></circle>
+                    <circle cx="17" cy="19.5" r="1.5" stroke="#00d4aa" stroke-width="2"></circle>
+                </svg>
+                <div class="shipping-details">
+                    <div class="shipping-free">Frete grátis</div>
+                    <div class="shipping-date" id="shipping-date">Receba até...</div>
+                    <div class="shipping-fee">Taxa de envio: R$ 9,60</div>
+                </div>
+                <span>›</span>
+            </div>
+            <div class="shipping-row">
+                <svg class="shipping-icon" fill="none" height="20" viewbox="0 0 24 24" width="20">
+                    <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="#00d4aa" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <path d="M9 12L11 14L15 10" stroke="#00d4aa" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"></path>
+                </svg>
+                <div class="shipping-details">
+                    <div>Devoluções gratuitas em 30 dias • Cancelamento f...</div>
+                </div>
+                <span>›</span>
+            </div>
+        </section>
+        <!-- Tabs -->
+        <div id="sticky-tabs" class="tabs"
+            style="display: none; position: sticky; top: 57px; z-index: 99; background: white; border-bottom: 1px solid #f0f0f0;">
+            <div class="tab active" onclick="scrollToVisaoGeral()">Visão geral</div>
+            <div class="tab" onclick="scrollToAvaliacoes()">Avaliações</div>
+            <div class="tab" onclick="scrollToDescription()">Descrição</div>
+            <div class="tab" onclick="scrollToRecomendacoes()">Recomendações</div>
+        </div>
+        <!-- Tab Content -->
+        <div class="content-section active" id="overview">
+            <!-- Options -->
+
+            <!-- Reviews Section -->
+            <section id="avaliacoes-section" class="reviews-section">
+                <div class="reviews-header">
+                    <span class="reviews-title">Avaliações dos clientes (207)</span>
+                </div>
+                <div class="reviews-rating">
+                    <span class="rating-big">4.7</span>
+                    <span>/5</span>
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                </div>
+                <!-- Novos depoimentos mais recentes aparecem primeiro -->
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-avatar">
+                            <img alt="C**l* S**t**" src="images/perfil1.png"
+                                style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="review-name">C**l* S**t**</span>
+                            <span style="color: #00d4aa; font-size: 11px; font-weight: 500;">há 2 horas</span>
+                        </div>
+                    </div>
+                    <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                    <div class="review-text">Maravilhoso!!!</div>
+                    <div class="review-images">
+                        <div class="review-image">
+                            <img alt="Review photo 1" src="images/rev1.png"
+                                onclick="openFullscreen('images/rev1.png', 0)">
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Beatriz Lima" src="images/perfil2.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">B**t** O**v**a</span>
+                                <span style="color: #00d4aa; font-size: 11px; font-weight: 500;">há 6 horas</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Ameii de mais, irei comprar mais com certeza❤️❤️❤️</div>
+                        <div class="review-images">
+                            <div class="review-image">
+                                <img alt="Review photo 1" src="images/rev2.png"
+                                    onclick="openFullscreen('images/rev2.png')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Patrícia Rodrigues" src="images/perfil3.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">P**r** R**g**s</span>
+                                <span style="color: #00d4aa; font-size: 11px; font-weight: 500;">há 14 horas</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Gente o produto veio igual ao anúncio gostei de minha compra ele fica
+                            na pele, é muito cheiroso, recomendo</div>
+                        <div class="review-images">
+                            <div class="review-image">
+                                <img alt="Review photo 1" src="images/rev3.png"
+                                    onclick="openFullscreen('images/rev3.png')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Ana Paula Silva" src="images/perfil4.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">A** P**l* S**v*</span>
+                                <span style="color: #00d4aa; font-size: 11px; font-weight: 500;">há 18 horas</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Achei excelente, eu tava muito ansiosa pra receber e saber como era,
+                            simplesmente amei....</div>
+                        <div class="review-images">
+                            <div class="review-image">
+                                <img alt="Review photo 1" src="images/rev4.png"
+                                    onclick="openFullscreen('images/rev4.png')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Juliana Oliveira" src="images/perfil5.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">J**i**a O**v**a</span>
+                                <span style="color: #00d4aa; font-size: 11px; font-weight: 500;">há 22 horas</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Gostei bastante, viinheram todas em 5 dias</div>
+                        <div class="review-images">
+                            <div class="review-image">
+                                <img onclick="openFullscreen('images/rev5.png')" alt="Review photo 1" src="images/rev5.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Mariana Costa" src="images/perfil6.png"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">M**i**a C**t*</span>
+                                <span style="color: #666; font-size: 11px; font-weight: 500;">há 1 dia</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Produto 100% original, amei. Muito bom, chegou certinho e muito bem
+                            embalado. Pode comprar sem medo.</div>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-avatar">
+                                <img alt="Fernanda Oliveira" src="images/perfil7.PNG"
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="review-name">F**n**d* O**v**r*</span>
+                                <span style="color: #666; font-size: 11px; font-weight: 500;">há 2 dias</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        <div class="review-variant">Item: Body Splash Victoria´s Secret Bare Vanilla 250ml</div>
+                        <div class="review-text">Maravilhoso, fora a entrega em tempo recorde</div>
+
+                    </div>
+                </div>
+                <div style="text-align: left; padding: 20px 20px 8px 20px; color: #666;">
+                    <div style="font-size: 16px; margin-bottom: 8px; color: #333;">Avaliações da loja (207)</div>
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px;">
+                        <span
+                            style="display: flex; align-items: center; gap: 4px; background: #f0f0f0; padding: 6px 10px; border-radius: 16px;">
+                            <svg fill="#666" height="14" viewbox="0 0 24 24" width="14">
+                                <path
+                                    d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z">
+                                </path>
+                            </svg>
+                            Inclui imagens ou vídeos(52)
+                        </span>
+                        <span
+                            style="display: flex; align-items: center; gap: 4px; background: #f0f0f0; padding: 6px 10px; border-radius: 16px;">
+                            <span style="color: #ffa500;">5</span>
+                            <svg fill="#ffa500" height="14" viewbox="0 0 24 24" width="14">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            (155)
+                        </span>
+                        <span
+                            style="display: flex; align-items: center; gap: 4px; background: #f0f0f0; padding: 6px 10px; border-radius: 16px;">
+                            <span style="color: #ffa500;">4</span>
+                            <svg fill="#ffa500" height="14" viewbox="0 0 24 24" width="14">
+                                <path
+                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                                </path>
+                            </svg>
+                            (22)
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a class="nav-item" href="#">
+                <svg class="nav-icon" fill="none" height="20" viewbox="0 0 24 24" width="20">
+                    <path
+                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"></path>
+                </svg>
+                <span>Loja</span>
+            </a>
+            <a class="nav-item" href="#">
+                <svg class="nav-icon" fill="none" height="20" viewbox="0 0 24 24" width="20">
+                    <path
+                        d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
+                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+                <span>Chat</span>
+            </a>
+            <button class="add-cart-btn">Ver Avaliações</button>
+            <a class="buy-btn" href="https://pay.checkoutsecurity.shop/68713494bab1b00ba17e08be"
+                style="display: flex; align-items: center; justify-content: center; text-decoration: none; color: white;"
+                target="_blank">Comprar Agora</a>
+        </nav>
+
+        <div class="flex items-center justify-between border p-4 rounded w-full max-w-md mx-auto mt-10 bg-white"
+            style="margin-top: 0; border: solid 10px #dddddd75; border-radius: 0px; border-left: 0px; border-right: 0px;">
+            <div class="flex items-center">
+                <img src="./images/logotipo.png" class="w-12 h-12 rounded-full border" alt="Aura Parfum">
+                <div class="ml-3">
+                    <p class="font-semibold text-gray-800" style="color: #000; font-weight: 500;">Aura Parfum</p>
+                    <p class="text-sm text-gray-500">51.8K vendidos</p>
+                </div>
+            </div>
+            <button style="font-weight: 500; color: #000;" id="seguirBtn"
+                class="bg-gray-100 text-gray-700 px-4 py-1 text-sm rounded hover:bg-gray-200 transition">
+                Seguir
+            </button>
+        </div>
+
+        <script>
+            const seguirBtn = document.getElementById('seguirBtn');
+
+            seguirBtn.addEventListener('click', () => {
+                seguirBtn.textContent = 'Seguindo';
+            });
+        </script>
+        <section id="descricao-produto" style="padding: 16px;">
+            <h3 id="descricao-titulo">Descrição do Produto</h3>
+            <p style="margin-top: 12px; line-height: 1.5; margin-bottom: 16px;">Body Splash Victoria s Secret é a
+                sensação para todas as mulheres e excelente para qualquer época do ano. Body Splash é como se fosse um
+                perfume, porém ele possui uma dosagem menor de essência. A fragância de Body Splash é tão deliciosa que
+                pode ser aplicada em todo o corpo, várias vezes ao longo do dia, proporcionando além de uma suavidade no
+                cheiro, uma pele muito mais macia e hidratada.</p>
+            <h4 style="margin-top: 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600;">Características:</h4>
+            <ul style="line-height: 1.6; color: #666; padding-left: 20px;">
+                <li>Quantidade: Body Splash Victoria's Secret Bare Vanilla 250ml</li>
+                <h4 style="margin-top: 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600;">Cuidados
+                    Especiais:</h4>
+                <li>Manter fora do alcance de crianças.
+
+                    Conservar em local fresco, seco e ao abrigo da luz solar direta.
+
+                    Evitar contato com os olhos e mucosas.
+
+                    Uso externo. Não ingerir.
+
+                    Em caso de irritação, suspender o uso imediatamente.
+
+                    Manter o frasco bem fechado após o uso.
+
+                    Inflamável: manter afastado de fontes de calor e chamas.</li>
+                <h4 style="margin-top: 20px; margin-bottom: 12px; font-size: 16px; font-weight: 600;">Garantia: Em caso
+                    de demora na entrega, defeitos de fábrica, entrar em contato com o Suporte imediatamente para
+                    receber a devolução do dinheiro.</h4>
+            </ul>
+        </section>
+    </div>
+    
+    <section id="recomendacoes" style="padding: 16px;">
+    <h3 style="text-align: center; font-size: 24px; font-weight: bold;">Recomendações</h3>
+     <div style="display: flex; justify-content: center; align-items: center; margin: 20px 0;">
+        <img src="images/ndaq-removebg-preview.png" alt="Body Splash Victoria's Secret Bare Vanilla" 
+             style="max-width: 300px; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); opacity: 0.3;">
+    </div>
+
+     <p style="text-align: center; font-size: 20px; font-weight: bold; color: #000000; margin: 20px 0; line-height: 1.6;">
+        Infelizmente ainda não temos recomendações para este produto, volte mais tarde.
+    </p>
+</section>
+        
+    <!-- Modal de tela cheia para imagens -->
+    <div id="fullscreen-container" class="fullscreen-modal">
+        <span class="close-fullscreen" id="fullscreen-close">&times;</span>
+        <div class="fullscreen-content">
+            <img id="fullscreen-image" class="fullscreen-image" src="" alt="Imagem em tela cheia">
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        
+        
+    </footer>
+    <!-- Share Overlay -->
+    <div id="share-overlay" class="share-overlay" onclick="closeShareSection()"></div>
+
+    <div id="share-section" class="share-section">
+        <div class="share-header">
+            <span class="share-title">Compartilhar</span>
+            <button class="share-close" onclick="closeShareSection()">×</button>
+        </div>
+        <div class="share-options">
+            <div class="share-option" onclick="copyLink()">
+                <div class="share-icon copy">🔗</div>
+                <span class="share-label" id="copy-link-btn">Copiar Link</span>
+            </div>
+            <div class="share-option" onclick="copyLink()">
+                <img class="share-icon" src="https://i.pinimg.com/736x/8f/ec/04/8fec04ad1b444aada93d93b35ac0b9ca.jpg">
+                <span class="share-label">WhatsApp</span>
+            </div>
+            <!-- [AQUI VEM O BASE64 DO INSTAGRAM - COPIE DO PRIMEIRO HTML] -->
+            <div class="share-option" onclick="copyLink()">
+                <img class="share-icon"
+                    src="data:image/jpeg;base64,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">
+                <span class="share-label">Instagram Direct</span>
+            </div>
+            <!-- [AQUI VEM O BASE64 DO FACEBOOK - COPIE DO PRIMEIRO HTML] -->
+            <div class="share-option" onclick="copyLink()">
+                <img class="share-icon"
+                    src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png">
+                <span class="share-label">Facebook</span>
+            </div>
+            <!-- [AQUI VEM O BASE64 DO TELEGRAM - COPIE DO PRIMEIRO HTML] -->
+            <div class="share-option" onclick="copyLink()">
+                <img class="share-icon" src="https://cdn.pixabay.com/photo/2021/12/27/10/50/telegram-6896827_1280.png">
+                <span class="share-label">Telegram</span>
+            </div>
+        </div>
+        <button class="share-cancel" onclick="closeShareSection()">Cancelar</button>
+    </div>
+
+    <!-- [AQUI VEM O COMPLAINT SECTION - COPIE DO PRIMEIRO HTML] -->
+    <div id="complaint-overlay" class="complaint-overlay" onclick="closeComplaintSection()"></div>
+
+    <div id="complaint-section" class="complaint-section">
+        <div class="share-options">
+            <button onclick="window.location.href='https://youtube.com'"
+                style="display: flex; gap: 5px; width: 100%;"><svg style=" font-weight: bold;" width="24px"
+                    height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <rect width="24" height="24" fill="white"></rect>
+                        <g filter="url(#filter0_d_15_295)">
+                            <path
+                                d="M4.5 21V16M4.5 16V6.5C5.5 5.5 7 5 8.5 5C11.5 5 13.5 7.5 17.5 5.5V15.5C13.5 17.5 11.5 14.5 8.5 14.5C7.5 14.5 5.5 15 4.5 16Z"
+                                stroke="#000000" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </g>
+                        <defs>
+                            <filter id="filter0_d_15_295" x="3" y="4.5" width="16" height="19"
+                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                <feColorMatrix in="SourceAlpha" type="matrix"
+                                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                </feColorMatrix>
+                                <feOffset dy="1"></feOffset>
+                                <feGaussianBlur stdDeviation="0.5"></feGaussianBlur>
+                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0">
+                                </feColorMatrix>
+                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_15_295">
+                                </feBlend>
+                                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_15_295"
+                                    result="shape"></feBlend>
+                            </filter>
+                        </defs>
+                    </g>
+                </svg> Denunciar</button>
+        </div>
+    </div>
+    <script>
+        function handleOpenShareSection() {
+            const shareSection = document.getElementById('share-section');
+            const shareOverlay = document.getElementById('share-overlay');
+            if (shareSection && shareOverlay) {
+                shareOverlay.style.display = 'block';
+                shareSection.style.display = 'block';
+
+                // Prevent touch events from propagating
+                document.body.style.overflow = 'hidden';
+                document.body.style.touchAction = 'none';
+
+                setTimeout(() => {
+                    shareOverlay.classList.add('active');
+                    shareSection.classList.add('active');
+                }, 10);
+            }
+        }
+
+        function handleOpenComplaintSection() {
+            const complaintSection = document.getElementById('complaint-section');
+            const complaintOverlay = document.getElementById('complaint-overlay');
+            if (complaintSection && complaintOverlay) {
+                complaintOverlay.style.display = 'block';
+                complaintSection.style.display = 'block';
+
+                // Prevent touch events from propagating
+                document.body.style.overflow = 'hidden';
+                document.body.style.touchAction = 'none';
+
+                setTimeout(() => {
+                    complaintOverlay.classList.add('active');
+                    complaintSection.classList.add('active');
+                }, 10);
+            }
+        }
+
+        function closeShareSection() {
+            const shareSection = document.getElementById('share-section');
+            const shareOverlay = document.getElementById('share-overlay');
+            if (shareSection && shareOverlay) {
+                shareOverlay.classList.remove('active');
+                shareSection.classList.remove('active');
+                
+                setTimeout(() => {
+                    shareOverlay.style.display = 'none';
+                    shareSection.style.display = 'none';
+                }, 300);
+                
+                // Restore body scroll
+                document.body.style.overflow = '';
+                document.body.style.touchAction = '';
+            }
+        }
+
+        function closeComplaintSection() {
+            const complaintSection = document.getElementById('complaint-section');
+            const complaintOverlay = document.getElementById('complaint-overlay');
+            if (complaintSection && complaintOverlay) {
+                complaintOverlay.classList.remove('active');
+                complaintSection.classList.remove('active');
+                
+                setTimeout(() => {
+                    complaintOverlay.style.display = 'none';
+                    complaintSection.style.display = 'none';
+                }, 300);
+                
+                // Restore body scroll
+                document.body.style.overflow = '';
+                document.body.style.touchAction = '';
+            }
+        }
+
+        async function copyLink() {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                const copyBtn = document.getElementById('copy-link-btn');
+                if (copyBtn) {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Link copiado!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 1500);
+                }
+            } catch (e) { 
+                // Fallback para navegadores mais antigos
+                const tempInput = document.createElement('input');
+                const url = window.location.href;
+                document.body.appendChild(tempInput);
+                tempInput.value = url;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('Link copiado para a área de transferência!');
+            }
+            // Fecha com animação suave
+            closeShareSection();
+        }
+
+        seguirBtn.addEventListener('click', () => {
+            seguirBtn.textContent = 'Seguindo';
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicialização do modal de tela cheia (se existir)
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const fullscreenClose = document.getElementById('fullscreen-close');
+
+            if (fullscreenClose && fullscreenContainer) {
+                fullscreenClose.addEventListener('click', closeFullscreen);
+                fullscreenContainer.addEventListener('click', (e) => {
+                    if (e.target === fullscreenContainer) {
+                        closeFullscreen();
+                    }
+                });
+            }
+        });
+
+    </script>
+    <script src="js/script.js"></script>
+
+    <script>
+        function handleStickyTabs() {
+            const header = document.getElementById('main-header');
+            const stickyTabs = document.getElementById('sticky-tabs');
+
+            if (header && stickyTabs) {
+                const headerHeight = header.offsetHeight;
+                const scrollPosition = window.scrollY;
+
+                // Mostra as tabs sticky quando passar da altura do header
+                if (scrollPosition > headerHeight + 10) {
+                    stickyTabs.style.display = 'flex';
+                } else {
+                    stickyTabs.style.display = 'none';
+                }
+            }
+        }
+function setupSectionObserver() {
+    const sections = {
+        visaoGeral: document.getElementById('visao-geral-section'),
+        avaliacoes: document.getElementById('avaliacoes-section'),
+        descricao: document.getElementById('descricao-produto'),
+        recomendacoes: document.getElementById('recomendacoes')
+    };
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Remove active de todas as tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Adiciona active na tab correspondente
+                if (entry.target === sections.visaoGeral) {
+                    // Ativa a primeira tab (índice 0)
+                    const allTabs = document.querySelectorAll('.tab');
+                    allTabs[0].classList.add('active');
+                } else if (entry.target === sections.avaliacoes) {
+                    // Ativa a segunda tab (índice 1)
+                    const allTabs = document.querySelectorAll('.tab');
+                    allTabs[1].classList.add('active');
+                } else if (entry.target === sections.descricao) {
+                    // Ativa a terceira tab (índice 2)
+                    const allTabs = document.querySelectorAll('.tab');
+                    allTabs[2].classList.add('active');
+                } else if (entry.target === sections.recomendacoes) {
+                    // Ativa a quarta tab (índice 3)
+                    const allTabs = document.querySelectorAll('.tab');
+                    allTabs[3].classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observa todas as seções
+    if (sections.visaoGeral) observer.observe(sections.visaoGeral);
+    if (sections.avaliacoes) observer.observe(sections.avaliacoes);
+    if (sections.descricao) observer.observe(sections.descricao);
+    if (sections.recomendacoes) observer.observe(sections.recomendacoes);
+}
+
+        function scrollToSection(sectionId, tabIndex) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // Remove active de todas as tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Adiciona active na tab correspondente (ambas versões)
+                const allTabs = document.querySelectorAll('.tab');
+                allTabs[tabIndex].classList.add('active');
+                if (allTabs[tabIndex + 3]) allTabs[tabIndex + 3].classList.add('active');
+
+                // Scroll suave
+                section.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Funções específicas de scroll
+        function scrollToVisaoGeral() {
+    const section = document.getElementById('visao-geral-section');
+    if (section) {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs[0].classList.add('active');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function scrollToAvaliacoes() {
+    const section = document.getElementById('avaliacoes-section');
+    if (section) {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs[1].classList.add('active');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function scrollToDescription() {
+    const h3Elements = document.querySelectorAll('h3');
+    let targetH3 = null;
+    
+    for (let i = 0; i < h3Elements.length; i++) {
+        if (h3Elements[i].textContent.trim() === 'Descrição do Produto') {
+            targetH3 = h3Elements[i];
+            break;
+        }
+    }
+    
+    if (targetH3) {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs[2].classList.add('active');
+        targetH3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+        
+         // Nova função para rolar até a seção de recomendações
+   function scrollToRecomendacoes() {
+    const section = document.getElementById('recomendacoes');
+    if (section) {
+        // Remove active de todas as tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Adiciona active na quarta tab (índice 3)
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs[3].classList.add('active');
+        
+        // Scroll suave
+        section.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+        // Função original mantida para compatibilidade
+        function showTab(tabId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Variável global para controle de imagens
+        let currentImageIndex = 0;
+        
+        // Função para abrir modal de tela cheia
+        function openFullscreen(imageSrc, imageIndex) {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const fullscreenImage = document.getElementById('fullscreen-image');
+            
+            if (fullscreenContainer && fullscreenImage) {
+                fullscreenImage.src = imageSrc;
+                fullscreenContainer.style.display = 'flex';
+                setTimeout(() => {
+                    fullscreenContainer.classList.add('active');
+                }, 10);
+                
+                // Atualizar índice atual para navegação
+                if (typeof imageIndex === 'number') {
+                    currentImageIndex = imageIndex;
+                }
+            }
+        }
+        
+        // Função para fechar modal de tela cheia
+        function closeFullscreen() {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            if (fullscreenContainer) {
+                fullscreenContainer.classList.remove('active');
+                setTimeout(() => {
+                    fullscreenContainer.style.display = 'none';
+                }, 300);
+            }
+        }
+        
+        // Função para navegar entre imagens no modal de tela cheia
+        function changeImageInFullscreen(direction) {
+            const productImages = [
+                './images/test.png'
+            ];
+
+            if (productImages.length <= 1) {
+                currentImageIndex = 0;
+                return;
+            }
+
+            currentImageIndex += direction;
+            
+            if (currentImageIndex < 0) {
+                currentImageIndex = productImages.length - 1;
+            } else if (currentImageIndex >= productImages.length) {
+                currentImageIndex = 0;
+            }
+            
+            const fullscreenImage = document.getElementById('fullscreen-image');
+            if (fullscreenImage) {
+                fullscreenImage.src = productImages[currentImageIndex];
+            }
+        }
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function () {
+            // Clona as tabs originais para a versão sticky
+            const originalTabs = document.querySelector('.tabs');
+            if (originalTabs) {
+                const stickyTabs = originalTabs.cloneNode(true);
+                stickyTabs.id = 'sticky-tabs';
+                stickyTabs.style.cssText = 'display: none; position: sticky; top: 57px; z-index: 99; background: white; border-bottom: 1px solid #f0f0f0;';
+
+                // Insere após o header
+                const header = document.getElementById('main-header');
+                if (header) {
+                    header.parentNode.insertBefore(stickyTabs, header.nextSibling);
+                }
+
+                // Adiciona o event listener para scroll
+                window.addEventListener('scroll', handleStickyTabs);
+
+                // Executa uma vez para verificar estado inicial
+                handleStickyTabs();
+            }
+
+            // Inicializa o observer de seções
+            setupSectionObserver();
+        });
+    </script>
+</body>

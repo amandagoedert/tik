@@ -1,0 +1,73 @@
+{
+  "id": "bare-vanilla-lotion",
+  "pagePath": "hidratante/index.html",
+  "title": "Creme Hidratante Victoria's Secret Bare Vanilla 236ml",
+  "subtitle": "Hidratação intensa com fragrância de baunilha quente",
+  "price": "R$ 29,98",
+  "priceValue": 29.98,
+  "oldPrice": "R$ 149,90",
+  "discount": "-80%",
+  "badge": "Oferta Relâmpago",
+  "rating": 4.9,
+  "ratingCount": 32,
+  "ratingText": "4.9 (32) 325 vendidos",
+  "soldText": "325 vendidos",
+  "storeSoldText": "51.8K vendidos",
+  "gallery": [
+    {
+      "src": "hidratante/images/hidratante.png",
+      "alt": "Creme Hidratante Bare Vanilla"
+    }
+  ],
+  "descriptionBlocks": [
+    {
+      "type": "paragraph",
+      "text": "O Creme Hidratante Victoria's Secret Bare Vanilla deixa a pele macia, nutrida e perfumada com notas de baunilha cremosa. Textura aveludada e absorção rápida para cuidados diários."
+    },
+    {
+      "type": "heading",
+      "text": "Características"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Quantidade: Creme Hidratante Victoria's Secret Bare Vanilla 236ml"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Cuidados Especiais"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Manter fora do alcance de crianças.",
+        "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+        "Evitar contato com os olhos e mucosas.",
+        "Uso externo. Não ingerir.",
+        "Em caso de irritação, suspender o uso imediatamente.",
+        "Manter o frasco bem fechado após o uso.",
+        "Inflamável: manter afastado de fontes de calor e chamas."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Garantia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+    }
+  ],
+  "recommendations": [
+    "bare-vanilla",
+    "pure-seduction",
+    "love-spell",
+    "kit-vanilla"
+  ],
+  "buyPath": "carrinho/",
+  "collections": [
+    "product-page"
+  ],
+  "description": "Creme hidratante de textura aveludada que nutre profundamente enquanto deixa a pele com o clássico aroma Bare Vanilla."
+}

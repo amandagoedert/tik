@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Aura Parfum</title>
+    <style>
+        /* TikTok Font Faces */
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/falcon/tiktok_fonts/TikTokFont-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/falcon/tiktok_fonts/TikTokFont-Semibold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'TikTokFont';
+            src: url('https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/falcon/tiktok_fonts/TikTokFont-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'TikTokFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body, html {
+            background-color: #ffffff;
+            color: #333333;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header {
+            background-color: #ffffff;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8e8e8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555555;
+        }
+        
+        .store-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .store-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .store-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .store-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #444444;
+        }
+        
+        .response-time {
+            font-size: 13px;
+            color: #888888;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        
+        .store-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .store-button img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            width: 100%;
+        }
+        
+        .top-content {
+            padding: 16px;
+            padding-bottom: 8px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 16px;
+            position: relative;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+        
+        .received {
+            background-color: #f5f5f5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            color: #444444;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .bot-icon {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            background-color: #666666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .bot-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .options-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 14px;
+            margin: 8px 0 16px 0;
+            border: 1px solid #e8e8e8;
+            width: auto;
+            max-width: 320px;
+        }
+        
+        .options-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #444444;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .option-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            background-color: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555555;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 400;
+        }
+        
+        .option-button:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .option-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .arrow {
+            color: #888888;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+        
+        .sent {
+            background-color: #666666;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chatbot-label {
+            font-size: 11px;
+            text-align: center;
+            color: #999999;
+            margin: 8px 0 12px 0;
+        }
+        
+        .conversation-area {
+            padding: 0 16px 16px 16px;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 12px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #e8e8e8;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        
+        .action-button {
+            background-color: #f5f5f5;
+            color: #555555;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 12px;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: background-color 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: #e8e8e8;
+        }
+        
+        .action-button:last-child {
+            margin-right: 0;
+        }
+        
+        .action-button img {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
+            border-radius: 20px;
+            padding: 8px 16px;
+            border: 1px solid #e8e8e8;
+            width: 100%;
+        }
+        
+        .input-container input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            outline: none;
+            font-size: 14px;
+            color: #555555;
+        }
+        
+        .input-container input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .send-button {
+            background: transparent;
+            border: none;
+            color: #666666;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Overlay escuro quando o pop-up estiver aberto */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overlay.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* Pop-up de política de privacidade */
+        .privacy-popup {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            padding: 20px 16px 16px 16px;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .privacy-popup.show {
+            transform: translateY(0);
+        }
+        
+        .privacy-content {
+            max-width: 100%;
+            margin: 0 auto;
+            text-align: left;
+            position: relative;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: -10px;
+            right: 0;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #888888;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .privacy-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #333333;
+            margin-bottom: 12px;
+        }
+        
+        .privacy-text {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .privacy-text strong {
+            font-weight: 600;
+        }
+        
+        .privacy-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .privacy-button {
+            background-color: #FE2C55;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            width: 85%;
+        }
+        
+        .privacy-button:hover {
+            background-color: #e41e4a;
+        }
+        
+        /* Desabilitar interação com elementos da página quando o pop-up estiver aberto */
+        body.popup-open .container > *:not(.privacy-popup):not(.overlay) {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        /* Garantir que não haja scroll fora do chat */
+        @media (max-width: 480px) {
+            body, html {
+                overflow: hidden;
+            }
+            
+            .container {
+                height: 100vh;
+                max-width: 100vw;
+            }
+            
+            .header {
+                padding: 14px;
+            }
+            
+            .top-content {
+                padding: 14px;
+                padding-bottom: 6px;
+            }
+            
+            .conversation-area {
+                padding: 0 14px 14px 14px;
+            }
+            
+            .options-container {
+                padding: 12px;
+                margin: 6px 0 12px 0;
+                max-width: 100%;
+            }
+            
+            .message {
+                max-width: 90%;
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+            
+            .action-button {
+                font-size: 11px;
+                padding: 5px 10px;
+                margin-right: 10px;
+            }
+            
+            .response-time {
+                font-size: 12px;
+                white-space: nowrap;
+            }
+            
+            .option-button {
+                padding: 9px 10px;
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            
+            .action-button img {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .footer {
+                padding: 12px 14px 14px 14px;
+            }
+            
+            .options-title {
+                font-size: 14px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+            }
+            
+            .privacy-popup {
+                padding: 18px 14px 14px 14px;
+            }
+            
+            .privacy-title {
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+            
+            .privacy-text {
+                font-size: 13px;
+                margin-bottom: 14px;
+            }
+            
+            .privacy-button {
+                padding: 11px 14px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-button" onclick="goBack()">←</button>
+                <div class="store-info">
+                    <a href="#" class="store-logo">
+                        <img src="../images/logotipo.png" alt="Aura Parfum">
+                    </a>
+                    <div>
+                        <div class="store-name">Aura Parfum</div>
+                        <div class="response-time">Tempo de resposta superior a 24 horas</div>
+                    </div>
+                </div>
+            </div>
+            <a href="../" class="store-button">
+                <img src="../images/logotipo.png" alt="Visitar Loja">
+            </a>
+        </div>
+        
+        <div class="chat-container" id="chat-container">
+            <div class="top-content">
+                <div class="message received">
+                    <a href="#" class="bot-icon">
+                        <img src="../images/robozinho.png" alt="Chatbot">
+                    </a>
+                    <div>Agradecemos por entrar em contato.<br>Como posso ajudar hoje?</div>
+                </div>
+                
+                <div class="options-container">
+                    <div class="options-title">Como posso ajudar você hoje?</div>
+                    <button class="option-button" onclick="selectOption('product-stock')">
+                        <span>Você tem esse produto em estoque?</span>
+                        <span class="arrow">›</span>
+                    </button>
+                    <button class="option-button" onclick="selectOption('buy-help')">
+                        <span>Estou tentando comprar</span>
+                        <span class="arrow">›</span>
+                    </button>
+                    <button class="option-button" onclick="selectOption('payment-help')">
+                        <span>Já paguei</span>
+                        <span class="arrow">›</span>
+                    </button>
+                    <button class="option-button" onclick="selectOption('usage-help')">
+                        <span>Como faço para usar?</span>
+                        <span class="arrow">›</span>
+                    </button>
+                    <button class="option-button" onclick="selectOption('product-info')">
+                        <span>O que está incluído no produto?</span>
+                        <span class="arrow">›</span>
+                    </button>
+                </div>
+                
+                <div class="chatbot-label">Enviado por chatbot</div>
+            </div>
+            
+            <div class="conversation-area" id="conversation-area">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="action-buttons">
+                <a href="javascript:void(0)" class="action-button" onclick="sendProduct()">
+                    <img src="../images/sacola.png" alt="Enviar produto">
+                    Enviar produto
+                </a>
+                <a href="javascript:void(0)" class="action-button" onclick="visitStore()">
+                    <img src="../images/logotipo.png" alt="Visitar loja">
+                    Visitar loja
+                </a>
+            </div>
+            <div class="input-container">
+                <input type="text" placeholder="Enviar mensagem..." id="message-input">
+                <button class="send-button" id="send-button" onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="privacy-popup" id="privacy-popup" role="dialog" aria-labelledby="privacy-title" aria-modal="true">
+        <div class="privacy-content">
+            <button class="close-button" onclick="closePrivacyPopup()" aria-label="Fechar">×</button>
+            <div class="privacy-title" id="privacy-title">Política de privacidade</div>
+            <div class="privacy-text">
+                Ao enviar uma mensagem, você reconhece que suas informações de bate-papo serão processadas e revisadas pelo TikTok de acordo com a <strong>Política de Privacidade do TikTok Shop</strong>.
+            </div>
+            <div class="privacy-button-container">
+                <button class="privacy-button" onclick="acceptPrivacyPolicy()">Entendi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const conversationArea = document.getElementById('conversation-area');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const privacyPopup = document.getElementById('privacy-popup');
+        const overlay = document.getElementById('overlay');
+        let usedOptions = new Set();
+        let manualMessageSent = false;
+        
+        const responses = {
+            'product-stock': "Sim, temos o Body Splash Bare Vanilla 250ml em estoque! É um de nossos produtos mais populares. Posso ajudar com algo mais?",
+            'buy-help': "Para comprar, basta clicar no botão 'Comprar Agora' na página do produto. Oferecemos frete grátis (entrega em 10-15 dias) ou frete expresso pago (entrega em 3-5 dias úteis).",
+            'payment-help': "Obrigada pelo seu pagamento! Seu pedido será processado em até 24h e você receberá um e-mail com o código de rastreamento. Tempo de entrega: 5-10 dias úteis.",
+            'usage-help': "O Body Splash Bare Vanilla pode be aplicado diretamente na pele após o banho para uma fragrância duradoura. Use nos pulsos, pescoço e atrás das orelhas para melhor fixação.",
+            'product-info': "O Body Splash Bare Vanilla 250ml inclui: 1 frasco do produto com spray. Ingredientes: água, fragrance, alcohol denat, entre outros. Livre de parabenos."
+        };
+        
+        window.onload = function() {
+            messageInput.focus();
+            
+            if (!localStorage.getItem('privacyPolicyAccepted')) {
+                setTimeout(() => {
+                    showPrivacyPopup();
+                }, 1000);
+            }
+        };
+        
+        function showPrivacyPopup() {
+            privacyPopup.classList.add('show');
+            overlay.classList.add('show');
+            document.body.classList.add('popup-open');
+            
+            // Adicionar evento para fechar com ESC
+            document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        function closePrivacyPopup() {
+            privacyPopup.classList.remove('show');
+            overlay.classList.remove('show');
+            document.body.classList.remove('popup-open');
+            
+            // Remover evento do ESC
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+        
+        function handleKeyDown(e) {
+            if (e.key === 'Escape') {
+                closePrivacyPopup();
+            }
+        }
+        
+        function acceptPrivacyPolicy() {
+            closePrivacyPopup();
+            localStorage.setItem('privacyPolicyAccepted', 'true');
+        }
+        
+        function selectOption(option) {
+            if (usedOptions.has(option)) return;
+            
+            usedOptions.add(option);
+            
+            const buttons = document.querySelectorAll('.option-button');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(getQuestionText(option))) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.7';
+                }
+            });
+            
+            addMessageToChat(getQuestionText(option), 'sent');
+            
+            setTimeout(() => {
+                addMessageToChat(responses[option], 'received', true);
+            }, 1000);
+        }
+        
+        function getQuestionText(option) {
+            const questions = {
+                'product-stock': "Você tem esse produto em estoque?",
+                'buy-help': "Estou tentando comprar",
+                'payment-help': "Já paguei",
+                'usage-help': "Como faço para usar?",
+                'product-info': "O que está incluído no produto?"
+            };
+            return questions[option];
+        }
+        
+        function addMessageToChat(text, type, isBot = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(type);
+            
+            if (isBot) {
+                messageDiv.innerHTML = `
+                    <a href="#" class="bot-icon">
+                        <img src="../images/robozinho.png" alt="Chatbot">
+                    </a>
+                    <div>${text}</div>
+                `;
+            } else {
+                messageDiv.textContent = text;
+            }
+            
+            conversationArea.appendChild(messageDiv);
+            conversationArea.scrollTop = conversationArea.scrollHeight;
+        }
+        
+        function sendMessage() {
+            if (manualMessageSent) return;
+            
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessageToChat(message, 'sent');
+                messageInput.value = '';
+                
+                // Desabilitar o envio de novas mensagens manuais
+                manualMessageSent = true;
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+                messageInput.placeholder = "Mensagem enviada. Aguarde nosso contato.";
+                
+                setTimeout(() => {
+                    addMessageToChat("Obrigada pela sua mensagem! Nosso time de suporte entrará em contato em até 24 horas para responder sua solicitação.", 'received', true);
+                }, 1500);
+            }
+        }
+        
+        function sendProduct() {
+            if (manualMessageSent) return;
+            
+            addMessageToChat("Enviar produto", 'sent');
+            
+            setTimeout(() => {
+                addMessageToChat("Para enviar informações do produto, preciso que você me informe o nome ou código do item que deseja.", 'received', true);
+            }, 1000);
+        }
+        
+        function visitStore() {
+            if (manualMessageSent) return;
+            
+            addMessageToChat("Visitar loja", 'sent');
+            
+            setTimeout(() => {
+                addMessageToChat("Redirecionando você para nossa loja oficial no TikTok Shop...", 'received', true);
+                
+                setTimeout(() => {
+                    window.location.href = "../";
+                }, 4000);
+            }, 1000);
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !manualMessageSent) {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

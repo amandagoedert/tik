@@ -1,0 +1,649 @@
+{
+  "generatedAt": "2025-10-23T12:59:54Z",
+  "count": 18,
+  "products": [
+    {
+      "id": "kit-coconut-passion-vs",
+      "title": "Kit Body Splash + Hidratante Coconut Passion Aura Parfum",
+      "price": "R$ 52,62",
+      "oldPrice": "R$ 197,46",
+      "image": "images/4c7bd230a2e742f8a82aa5d96866ace8~tplv-aphluv4xwc-resize-jpeg_350_350.jpeg",
+      "buy": "#",
+      "sold": "22.2K vendido(s)",
+      "collections": [
+        "featured",
+        "recommended"
+      ],
+      "featuredRank": 1,
+      "badges": [
+        "Frete grátis"
+      ],
+      "discountLabel": "73%",
+      "soldText": "22.2K vendido(s)",
+      "description": "✨ Kit Body Splash + Hidratante Coconut Passion – Aura Parfum ✨ Descubra uma experiência única de cuidado e sedução com o Combo Coconut Passion. Perfeito para quem busca uma fragrância doce, tropical e envolvente, esse kit combina Body Splash refrescante e Hidratante Corporal nutritivo, garantindo frescor, maciez e um aroma apaixonante em todos os momentos.",
+      "priceValue": 52.62,
+      "oldPriceValue": 197.46,
+      "recommendations": []
+    },
+    {
+      "id": "kit-bare-vanilla-vs",
+      "title": "Kit Body Splash + Creme Hidratante Bare Vanilla Aura Parfum 236ml+250ml",
+      "price": "R$ 49,14",
+      "oldPrice": "R$ 84,20",
+      "image": "images/903dde3edca44f789847b972949bc7d2~tplv-aphluv4xwc-resize-jpeg_350_350.png",
+      "buy": "#",
+      "sold": "7.4K vendido(s)",
+      "collections": [
+        "featured",
+        "recommended"
+      ],
+      "featuredRank": 2,
+      "badges": [
+        "Frete grátis"
+      ],
+      "discountLabel": "42%",
+      "soldText": "7.4K vendido(s)",
+      "description": "✨ Kit Body Splash + Creme Hidratante Bare Vanilla – Aura Parfum ✨ Combinação perfeita de hidratação intensa e fragrância prolongada. O Body Splash envolve sua pele com notas adocicadas e marcantes de baunilha, enquanto o Creme Hidratante nutre profundamente, deixando um toque macio e perfumado por muito mais tempo.",
+      "priceValue": 49.14,
+      "oldPriceValue": 84.2,
+      "recommendations": []
+    },
+    {
+      "id": "kit-pure-seduction-vs",
+      "title": "Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml",
+      "price": "R$ 71,99",
+      "oldPrice": "R$ 84,20",
+      "image": "images/Gemini_Generated_Image_3y6npe3y6npe3y6n (1).jpeg",
+      "buy": "#",
+      "sold": "5.9K vendido(s)",
+      "collections": [
+        "featured",
+        "recommended"
+      ],
+      "featuredRank": 3,
+      "badges": [
+        "Frete grátis"
+      ],
+      "discountLabel": "14%",
+      "soldText": "5.9K vendido(s)",
+      "description": "✨ Kit Body Splash + Creme Hidratante Pure Seduction – Aura Parfum ✨ Fragrância frutada e feminina de ameixa vermelha e frésia. O Body Splash perfuma por horas e o creme hidrata, prolongando o aroma para um toque sedutor o dia todo.",
+      "priceValue": 71.99,
+      "oldPriceValue": 84.2,
+      "recommendations": []
+    },
+    {
+      "id": "recom-1",
+      "title": "Kit Body Splash + Creme Hidratante Coconut Passion Aura Parfum 236ml+250ml",
+      "price": "R$ 51,72",
+      "oldPrice": "R$ 84,20",
+      "image": "images/4c7bd230a2e742f8a82aa5d96866ace8~tplv-aphluv4xwc-resize-jpeg_350_350.jpeg",
+      "buy": "#",
+      "sold": "7.4k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF",
+        "Frete grátis"
+      ],
+      "soldText": "7.4k vendido(s)",
+      "description": "Kit Coconut Passion com Body Splash e Hidratante para uma experiência tropical e adocicada.",
+      "priceValue": 51.72,
+      "oldPriceValue": 84.2,
+      "recommendations": []
+    },
+    {
+      "id": "recom-2",
+      "title": "Kit Body Splash + Creme Hidratante Pure Seduction Aura Parfum 236ml+250ml",
+      "price": "R$ 51,72",
+      "oldPrice": "R$ 84,20",
+      "image": "images/15abc260-59f5-4a6b-aba2-ff035b06c77c.jpeg",
+      "buy": "#",
+      "sold": "7.4k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF",
+        "Frete grátis"
+      ],
+      "soldText": "7.4k vendido(s)",
+      "description": "Kit Pure Seduction une Body Splash e Hidratante para fragrância frutada o dia todo.",
+      "priceValue": 51.72,
+      "oldPriceValue": 84.2,
+      "recommendations": []
+    },
+    {
+      "id": "recom-3",
+      "title": "Kit Victoria Secrets",
+      "price": "R$ 71,99",
+      "oldPrice": "R$ 84,20",
+      "image": "images/Generated Image September 15, 2025 - 3_01PM (1).png",
+      "buy": "#",
+      "sold": "5.9k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "5.9k vendido(s)",
+      "description": "Kit Victoria Secrets edição limitada com itens best-sellers para uma rotina completa de fragrância.",
+      "priceValue": 71.99,
+      "oldPriceValue": 84.2
+    },
+    {
+      "id": "recom-4",
+      "title": "Hidratante Calming Cream",
+      "price": "R$ 47,36",
+      "oldPrice": "R$ 52,62",
+      "image": "images/Generated Image September 15, 2025 - 3_03PM.png",
+      "buy": "#",
+      "sold": "22.2k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF",
+        "Frete grátis"
+      ],
+      "soldText": "22.2k vendido(s)",
+      "description": "Kit Body Splash + Creme Hidratante Bare Vanilla Victoria’s Secret 250ml+236ml oferece hidratação e fragrância adocicada de baunilha.",
+      "priceValue": 47.36,
+      "oldPriceValue": 52.62
+    },
+    {
+      "id": "recom-5",
+      "title": "Kit Victoria Secrets",
+      "price": "R$ 85,26",
+      "oldPrice": "R$ 94,73",
+      "image": "images/vs5.png",
+      "buy": "#",
+      "sold": "3.1k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "3.1k vendido(s)",
+      "description": "Kit Victoria Secrets apresenta combinação de itens clássicos ideal para presentear.",
+      "priceValue": 85.26,
+      "oldPriceValue": 94.73
+    },
+    {
+      "id": "recom-6",
+      "title": "Ácido Glicólico 30g",
+      "price": "R$ 51,72",
+      "oldPrice": "R$ 84,20",
+      "image": "images/vs6.png",
+      "buy": "#",
+      "sold": "9.2k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "9.2k vendido(s)",
+      "description": "Ácido Glicólico 30g promove esfoliação química suave e melhora a textura da pele.",
+      "priceValue": 51.72,
+      "oldPriceValue": 84.2
+    },
+    {
+      "id": "recom-7",
+      "title": "Kit Victoria Secrets",
+      "price": "R$ 71,99",
+      "oldPrice": "R$ 84,20",
+      "image": "images/vs7.png",
+      "buy": "#",
+      "sold": "4.6k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "4.6k vendido(s)",
+      "description": "Kit Victoria Secrets garante perfume e hidratação com seleção exclusiva da marca.",
+      "priceValue": 71.99,
+      "oldPriceValue": 84.2
+    },
+    {
+      "id": "recom-8",
+      "title": "Creme Hidratante Coconut Milk & Rose Victoria’s Secret 236ml",
+      "price": "R$ 47,36",
+      "oldPrice": "R$ 52,62",
+      "image": "images/vs8.png",
+      "buy": "#",
+      "sold": "12.4k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF",
+        "Frete grátis"
+      ],
+      "soldText": "12.4k vendido(s)",
+      "description": "Creme Hidratante Coconut Milk & Rose Victoria’s Secret 236ml combina fragrância floral suave com hidratação cremosa e duradoura.",
+      "priceValue": 47.36,
+      "oldPriceValue": 52.62
+    },
+    {
+      "id": "recom-9",
+      "title": "Kit Victoria Secrets",
+      "price": "R$ 85,26",
+      "oldPrice": "R$ 94,73",
+      "image": "images/vs9.png",
+      "buy": "#",
+      "sold": "8.1k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "8.1k vendido(s)",
+      "description": "Kit Victoria Secrets reúne cuidados essenciais para deixar a pele perfumada o dia todo.",
+      "priceValue": 85.26,
+      "oldPriceValue": 94.73
+    },
+    {
+      "id": "recom-10",
+      "title": "Creme Hidratante Temptation Victoria’s Secret 236ml",
+      "price": "R$ 51,72",
+      "oldPrice": "R$ 84,20",
+      "image": "images/vs10.png",
+      "buy": "#",
+      "sold": "6.7k vendido(s)",
+      "collections": [
+        "recommended"
+      ],
+      "badges": [
+        "10% OFF"
+      ],
+      "soldText": "6.7k vendido(s)",
+      "description": "Creme Hidratante Temptation Victoria’s Secret 236ml envolve a pele com fragrância sedutora e toque macio por horas.",
+      "priceValue": 51.72,
+      "oldPriceValue": 84.2
+    },
+    {
+      "id": "bare-vanilla",
+      "pagePath": "index.html",
+      "title": "Body Splash Victoria's Secret Bare Vanilla 250ml",
+      "subtitle": "Fragrância doce de baunilha com hidratação leve",
+      "price": "R$ 35,97",
+      "priceValue": 35.97,
+      "oldPrice": "R$ 179,83",
+      "discount": "-80%",
+      "badge": "Oferta Relâmpago",
+      "rating": 4.7,
+      "ratingCount": 204,
+      "ratingText": "4.7 (204) 4473 vendidos",
+      "soldText": "4473 vendidos",
+      "storeSoldText": "51.8K vendidos",
+      "gallery": [
+        {
+          "src": "images/test.png",
+          "alt": "Body Splash Bare Vanilla 250ml"
+        }
+      ],
+      "descriptionBlocks": [
+        {
+          "type": "paragraph",
+          "text": "Body Splash Victoria's Secret é a sensação para todas as mulheres e excelente para qualquer época do ano. Body Splash é como se fosse um perfume, porém possui menor concentração de essência. Ele pode ser aplicado em todo o corpo, várias vezes ao longo do dia, proporcionando suavidade no cheiro e pele macia e hidratada."
+        },
+        {
+          "type": "heading",
+          "text": "Características"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Quantidade: Body Splash Victoria's Secret Bare Vanilla 250ml"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Cuidados Especiais"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Manter fora do alcance de crianças.",
+            "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+            "Evitar contato com os olhos e mucosas.",
+            "Uso externo. Não ingerir.",
+            "Em caso de irritação, suspender o uso imediatamente.",
+            "Manter o frasco bem fechado após o uso.",
+            "Inflamável: manter afastado de fontes de calor e chamas."
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Garantia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+        }
+      ],
+      "recommendations": [
+        "bare-vanilla-lotion",
+        "pure-seduction",
+        "love-spell",
+        "kit-vanilla"
+      ],
+      "buyPath": "carrinho/",
+      "collections": [
+        "product-page"
+      ],
+      "description": "Body Splash com fragrância adocicada de baunilha cremosa que perfuma o corpo e reforça a hidratação leve.",
+      "image": "images/db5.png",
+      "oldPriceValue": 179.83
+    },
+    {
+      "id": "love-spell",
+      "pagePath": "love/index.html",
+      "title": "Body Splash Victoria's Secret Love Spell 250ml",
+      "subtitle": "Notas vibrantes de flor de cerejeira e pêssego suculento",
+      "price": "R$ 53,95",
+      "priceValue": 53.95,
+      "oldPrice": "R$ 179,83",
+      "discount": "-65%",
+      "badge": "Oferta Relâmpago",
+      "rating": 4.7,
+      "ratingCount": 52,
+      "ratingText": "4.7 (52) 642 vendidos",
+      "soldText": "642 vendidos",
+      "storeSoldText": "51.8K vendidos",
+      "gallery": [
+        {
+          "src": "love/images/body2.png",
+          "alt": "Body Splash Love Spell"
+        }
+      ],
+      "descriptionBlocks": [
+        {
+          "type": "paragraph",
+          "text": "O Body Splash Victoria's Secret Love Spell é pura paixão em forma de fragrância. Com notas de flor de cerejeira e pêssego suculento, entrega um aroma doce, frutado e feminino. Leve e refrescante, pode ser aplicado ao longo do dia, deixando a pele macia e revigorada."
+        },
+        {
+          "type": "heading",
+          "text": "Características"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Quantidade: Body Splash Victoria's Secret Love Spell 250ml"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Cuidados Especiais"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Manter fora do alcance de crianças.",
+            "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+            "Evitar contato com os olhos e mucosas.",
+            "Uso externo. Não ingerir.",
+            "Em caso de irritação, suspender o uso imediatamente.",
+            "Manter o frasco bem fechado após o uso.",
+            "Inflamável: manter afastado de fontes de calor e chamas."
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Garantia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+        }
+      ],
+      "recommendations": [
+        "bare-vanilla",
+        "bare-vanilla-lotion",
+        "pure-seduction",
+        "kit-vanilla"
+      ],
+      "buyPath": "carrinho/",
+      "collections": [
+        "product-page"
+      ],
+      "description": "Body Splash Love Spell combina flor de cerejeira e pêssego suculento para um aroma doce e vibrante ao longo do dia.",
+      "image": "images/bd3.png",
+      "oldPriceValue": 179.83
+    },
+    {
+      "id": "kit-vanilla",
+      "pagePath": "kitfull/index.html",
+      "title": "Kit Vanilla Victoria's Secret - Body Splash, Hidratante e Sabonete",
+      "subtitle": "Combo completo Bare Vanilla com três itens essenciais",
+      "price": "R$ 170,37",
+      "priceValue": 170.37,
+      "oldPrice": "R$ 567,90",
+      "discount": "-65%",
+      "badge": "Oferta Relâmpago",
+      "rating": 4.7,
+      "ratingCount": 2,
+      "ratingText": "4.7 (2) 30 vendidos",
+      "soldText": "30 vendidos",
+      "storeSoldText": "51.8K vendidos",
+      "gallery": [
+        {
+          "src": "kitfull/images/kitfull2.png",
+          "alt": "Kit Bare Vanilla completo"
+        }
+      ],
+      "descriptionBlocks": [
+        {
+          "type": "paragraph",
+          "text": "O Kit Victoria's Secret Vanilla combina Body Splash, Creme Hidratante e Sabonete Líquido para uma rotina completa de autocuidado. A fragrância de baunilha quente envolve o corpo enquanto os produtos hidratam e perfumam suavemente."
+        },
+        {
+          "type": "heading",
+          "text": "Características"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Itens:",
+            "Body Splash Victoria's Secret Bare Vanilla 250ml",
+            "Creme Hidratante Victoria's Secret Bare Vanilla 236ml",
+            "Sabonete Líquido Victoria's Secret Bare Vanilla 300ml"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Cuidados Especiais"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Manter fora do alcance de crianças.",
+            "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+            "Evitar contato com os olhos e mucosas.",
+            "Uso externo. Não ingerir.",
+            "Em caso de irritação, suspender o uso imediatamente.",
+            "Manter o frasco bem fechado após o uso.",
+            "Inflamável: manter afastado de fontes de calor e chamas."
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Garantia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+        }
+      ],
+      "recommendations": [
+        "bare-vanilla",
+        "bare-vanilla-lotion",
+        "pure-seduction",
+        "love-spell"
+      ],
+      "buyPath": "carrinho/",
+      "collections": [
+        "product-page"
+      ],
+      "description": "Kit completo Bare Vanilla com Body Splash, Hidratante e Sabonete Líquido para um ritual de cuidado perfumado.",
+      "image": "kitfull/images/kitfull2.png",
+      "oldPriceValue": 567.9
+    },
+    {
+      "id": "bare-vanilla-lotion",
+      "pagePath": "hidratante/index.html",
+      "title": "Creme Hidratante Victoria's Secret Bare Vanilla 236ml",
+      "subtitle": "Hidratação intensa com fragrância de baunilha quente",
+      "price": "R$ 29,98",
+      "priceValue": 29.98,
+      "oldPrice": "R$ 149,90",
+      "discount": "-80%",
+      "badge": "Oferta Relâmpago",
+      "rating": 4.9,
+      "ratingCount": 32,
+      "ratingText": "4.9 (32) 325 vendidos",
+      "soldText": "325 vendidos",
+      "storeSoldText": "51.8K vendidos",
+      "gallery": [
+        {
+          "src": "hidratante/images/hidratante.png",
+          "alt": "Creme Hidratante Bare Vanilla"
+        }
+      ],
+      "descriptionBlocks": [
+        {
+          "type": "paragraph",
+          "text": "O Creme Hidratante Victoria's Secret Bare Vanilla deixa a pele macia, nutrida e perfumada com notas de baunilha cremosa. Textura aveludada e absorção rápida para cuidados diários."
+        },
+        {
+          "type": "heading",
+          "text": "Características"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Quantidade: Creme Hidratante Victoria's Secret Bare Vanilla 236ml"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Cuidados Especiais"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Manter fora do alcance de crianças.",
+            "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+            "Evitar contato com os olhos e mucosas.",
+            "Uso externo. Não ingerir.",
+            "Em caso de irritação, suspender o uso imediatamente.",
+            "Manter o frasco bem fechado após o uso.",
+            "Inflamável: manter afastado de fontes de calor e chamas."
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Garantia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+        }
+      ],
+      "recommendations": [
+        "bare-vanilla",
+        "pure-seduction",
+        "love-spell",
+        "kit-vanilla"
+      ],
+      "buyPath": "carrinho/",
+      "collections": [
+        "product-page"
+      ],
+      "description": "Creme hidratante de textura aveludada que nutre profundamente enquanto deixa a pele com o clássico aroma Bare Vanilla.",
+      "image": "hidratante/images/hidratante.png",
+      "oldPriceValue": 149.9
+    },
+    {
+      "id": "pure-seduction",
+      "pagePath": "pure/index.html",
+      "title": "Body Splash Victoria's Secret Pure Seduction 250ml",
+      "subtitle": "Ameixa vermelha e frésia para uma fragrância envolvente",
+      "price": "R$ 119,92",
+      "priceValue": 119.92,
+      "oldPrice": "R$ 179,83",
+      "discount": "-50%",
+      "badge": "Oferta Relâmpago",
+      "rating": 4.7,
+      "ratingCount": 52,
+      "ratingText": "4.7 (52) 642 vendidos",
+      "soldText": "642 vendidos",
+      "storeSoldText": "51.8K vendidos",
+      "gallery": [
+        {
+          "src": "pure/images/body3.png",
+          "alt": "Body Splash Pure Seduction"
+        }
+      ],
+      "descriptionBlocks": [
+        {
+          "type": "paragraph",
+          "text": "O Body Splash Victoria's Secret Pure Seduction combina ameixa vermelha suculenta com frésia adocicada para um aroma marcante e feminino. Ideal para quem busca frescor e sensualidade durante todo o dia."
+        },
+        {
+          "type": "heading",
+          "text": "Características"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Quantidade: Body Splash Victoria's Secret Pure Seduction 250ml"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Cuidados Especiais"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Manter fora do alcance de crianças.",
+            "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+            "Evitar contato com os olhos e mucosas.",
+            "Uso externo. Não ingerir.",
+            "Em caso de irritação, suspender o uso imediatamente.",
+            "Manter o frasco bem fechado após o uso.",
+            "Inflamável: manter afastado de fontes de calor e chamas."
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Garantia"
+        },
+        {
+          "type": "paragraph",
+          "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+        }
+      ],
+      "recommendations": [
+        "bare-vanilla",
+        "bare-vanilla-lotion",
+        "love-spell",
+        "kit-vanilla"
+      ],
+      "buyPath": "carrinho/",
+      "collections": [
+        "product-page"
+      ],
+      "description": "Body Splash Pure Seduction traz notas de ameixa vermelha e frésia adocicada para uma sensação fresca e sensual.",
+      "image": "images/bd6.png",
+      "oldPriceValue": 179.83
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "kit-vanilla",
+  "pagePath": "kitfull/index.html",
+  "title": "Kit Vanilla Victoria's Secret - Body Splash, Hidratante e Sabonete",
+  "subtitle": "Combo completo Bare Vanilla com três itens essenciais",
+  "price": "R$ 170,37",
+  "priceValue": 170.37,
+  "oldPrice": "R$ 567,90",
+  "discount": "-65%",
+  "badge": "Oferta Relâmpago",
+  "rating": 4.7,
+  "ratingCount": 2,
+  "ratingText": "4.7 (2) 30 vendidos",
+  "soldText": "30 vendidos",
+  "storeSoldText": "51.8K vendidos",
+  "gallery": [
+    {
+      "src": "kitfull/images/kitfull2.png",
+      "alt": "Kit Bare Vanilla completo"
+    }
+  ],
+  "descriptionBlocks": [
+    {
+      "type": "paragraph",
+      "text": "O Kit Victoria's Secret Vanilla combina Body Splash, Creme Hidratante e Sabonete Líquido para uma rotina completa de autocuidado. A fragrância de baunilha quente envolve o corpo enquanto os produtos hidratam e perfumam suavemente."
+    },
+    {
+      "type": "heading",
+      "text": "Características"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Itens:",
+        "Body Splash Victoria's Secret Bare Vanilla 250ml",
+        "Creme Hidratante Victoria's Secret Bare Vanilla 236ml",
+        "Sabonete Líquido Victoria's Secret Bare Vanilla 300ml"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Cuidados Especiais"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Manter fora do alcance de crianças.",
+        "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+        "Evitar contato com os olhos e mucosas.",
+        "Uso externo. Não ingerir.",
+        "Em caso de irritação, suspender o uso imediatamente.",
+        "Manter o frasco bem fechado após o uso.",
+        "Inflamável: manter afastado de fontes de calor e chamas."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Garantia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+    }
+  ],
+  "recommendations": [
+    "bare-vanilla",
+    "bare-vanilla-lotion",
+    "pure-seduction",
+    "love-spell"
+  ],
+  "buyPath": "carrinho/",
+  "collections": [
+    "product-page"
+  ],
+  "description": "Kit completo Bare Vanilla com Body Splash, Hidratante e Sabonete Líquido para um ritual de cuidado perfumado."
+}

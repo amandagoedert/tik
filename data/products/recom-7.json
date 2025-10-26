@@ -1,0 +1,17 @@
+{
+  "id": "recom-7",
+  "title": "Kit Victoria Secrets",
+  "price": "R$ 71,99",
+  "oldPrice": "R$ 84,20",
+  "image": "images/vs7.png",
+  "buy": "#",
+  "sold": "4.6k vendido(s)",
+  "collections": [
+    "recommended"
+  ],
+  "badges": [
+    "10% OFF"
+  ],
+  "soldText": "4.6k vendido(s)",
+  "description": "Kit Victoria Secrets garante perfume e hidratação com seleção exclusiva da marca."
+}

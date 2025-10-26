@@ -1,0 +1,73 @@
+{
+  "id": "love-spell",
+  "pagePath": "love/index.html",
+  "title": "Body Splash Victoria's Secret Love Spell 250ml",
+  "subtitle": "Notas vibrantes de flor de cerejeira e pêssego suculento",
+  "price": "R$ 53,95",
+  "priceValue": 53.95,
+  "oldPrice": "R$ 179,83",
+  "discount": "-65%",
+  "badge": "Oferta Relâmpago",
+  "rating": 4.7,
+  "ratingCount": 52,
+  "ratingText": "4.7 (52) 642 vendidos",
+  "soldText": "642 vendidos",
+  "storeSoldText": "51.8K vendidos",
+  "gallery": [
+    {
+      "src": "love/images/body2.png",
+      "alt": "Body Splash Love Spell"
+    }
+  ],
+  "descriptionBlocks": [
+    {
+      "type": "paragraph",
+      "text": "O Body Splash Victoria's Secret Love Spell é pura paixão em forma de fragrância. Com notas de flor de cerejeira e pêssego suculento, entrega um aroma doce, frutado e feminino. Leve e refrescante, pode ser aplicado ao longo do dia, deixando a pele macia e revigorada."
+    },
+    {
+      "type": "heading",
+      "text": "Características"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Quantidade: Body Splash Victoria's Secret Love Spell 250ml"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Cuidados Especiais"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Manter fora do alcance de crianças.",
+        "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+        "Evitar contato com os olhos e mucosas.",
+        "Uso externo. Não ingerir.",
+        "Em caso de irritação, suspender o uso imediatamente.",
+        "Manter o frasco bem fechado após o uso.",
+        "Inflamável: manter afastado de fontes de calor e chamas."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Garantia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+    }
+  ],
+  "recommendations": [
+    "bare-vanilla",
+    "bare-vanilla-lotion",
+    "pure-seduction",
+    "kit-vanilla"
+  ],
+  "buyPath": "carrinho/",
+  "collections": [
+    "product-page"
+  ],
+  "description": "Body Splash Love Spell combina flor de cerejeira e pêssego suculento para um aroma doce e vibrante ao longo do dia."
+}

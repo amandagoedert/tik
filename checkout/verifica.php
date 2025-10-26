@@ -1,0 +1,122 @@
+<?php
+// Arquivo para verificar status de pagamento TriboPay
+
+// Permitir requisições AJAX
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Função para registrar logs
+function logPaymentCheck($message) {
+    $logFile = 'monetrix_log.php';
+    $timestamp = date('[Y-m-d H:i:s]');
+    $logEntry = "<?php exit; ?>\n$timestamp PAYMENT_CHECK: $message\n";
+    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+}
+
+try {
+    // Pegar ID da transação
+    $transactionId = $_GET['id'] ?? null;
+    
+    if (!$transactionId) {
+        throw new Exception('ID da transação não informado');
+    }
+    
+    logPaymentCheck("Verificando pagamento para transação: $transactionId");
+    
+    // Carregar configurações TriboPay
+    $config = include 'tribopay_config.php';
+    
+    if (!$config['api_token']) {
+        throw new Exception('Token da API não configurado');
+    }
+    
+    // URL da API TriboPay para consultar transação
+    $apiUrl = "https://api.tribopay.com.br/v1/transaction/status";
+    
+    // Dados para consulta
+    $payload = [
+        'token' => $config['api_token'],
+        'transaction_hash' => $transactionId
+    ];
+    
+    // Configurar cURL
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $apiUrl,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'User-Agent: VictoriasSecret-Store/1.0'
+        ],
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_SSL_VERIFYPEER => false
+    ]);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+    
+    if ($curlError) {
+        throw new Exception("Erro cURL: $curlError");
+    }
+    
+    if ($httpCode !== 200) {
+        logPaymentCheck("Erro HTTP $httpCode na consulta: $response");
+        throw new Exception("Erro na API (HTTP $httpCode)");
+    }
+    
+    $apiData = json_decode($response, true);
+    
+    if (!$apiData) {
+        throw new Exception('Resposta inválida da API');
+    }
+    
+    logPaymentCheck("Resposta da API: " . json_encode($apiData));
+    
+    // Verificar status do pagamento
+    $status = 'pendente'; // status padrão
+    
+    if (isset($apiData['status'])) {
+        switch (strtolower($apiData['status'])) {
+            case 'paid':
+            case 'approved':
+            case 'completed':
+                $status = 'pago';
+                break;
+            case 'pending':
+            case 'waiting':
+                $status = 'pendente';
+                break;
+            case 'cancelled':
+            case 'rejected':
+            case 'failed':
+                $status = 'cancelado';
+                break;
+        }
+    }
+    
+    logPaymentCheck("Status final determinado: $status");
+    
+    // Retornar status
+    echo json_encode([
+        'success' => true,
+        'status' => $status,
+        'transaction_id' => $transactionId,
+        'api_response' => $apiData
+    ]);
+    
+} catch (Exception $e) {
+    logPaymentCheck("Erro na verificação: " . $e->getMessage());
+    
+    echo json_encode([
+        'success' => false,
+        'status' => 'erro',
+        'message' => $e->getMessage()
+    ]);
+}

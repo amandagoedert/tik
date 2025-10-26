@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denunciar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+            color: #333;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .container {
+            background-color: white;
+            min-height: calc(100vh - 60px);
+            padding: 0;
+        }
+        
+        .report-options {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .report-option {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .report-option:active {
+            background-color: #f8f8f8;
+        }
+        
+        .report-option-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .report-option-arrow {
+            color: #ccc;
+            font-size: 18px;
+        }
+        
+        /* Modal de denúncia */
+        .report-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .modal-body {
+            padding: 16px;
+        }
+        
+        .reason-section {
+            margin-bottom: 20px;
+        }
+        
+        .reason-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .reason-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .description-section {
+            margin-bottom: 20px;
+        }
+        
+        .description-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .description-textarea {
+            width: 100%;
+            height: 120px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 8px;
+        }
+        
+        .char-count {
+            text-align: right;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .char-count.limit {
+            color: #ff2d55;
+        }
+        
+        .warning-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .report-button {
+            display: block;
+            width: 100%;
+            background-color: #ff2d55;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .report-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="window.location.href='../'">←</button>
+        <h1 class="header-title">Denunciar</h1>
+    </div>
+    
+    <div class="container">
+        <ul class="report-options">
+            <li class="report-option" onclick=>
+                <span class="report-option-text">Selecione o motivo</span>
+                
+            </li>
+            <li class="report-option" onclick="openReportModal('Munição e armas')">
+                <span class="report-option-text">Munição e armas</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Itens inflamáveis, tóxicos ou perigosos')">
+                <span class="report-option-text">Itens inflamáveis, tóxicos ou perigosos</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Itens ofensivos ou discriminatórios')">
+                <span class="report-option-text">Itens ofensivos ou discriminatórios</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Produtos ilegais de origem animal ou humana')">
+                <span class="report-option-text">Produtos ilegais de origem animal ou humana</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Produtos e serviços para adultos')">
+                <span class="report-option-text">Produtos e serviços para adultos</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Drogas')">
+                <span class="report-option-text">Drogas</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Violação de propriedade intelectual')">
+                <span class="report-option-text">Violação de propriedade intelectual</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Produto com informações imprecisas')">
+                <span class="report-option-text">Produto com informações imprecisas</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Burla ou fraude')">
+                <span class="report-option-text">Burla ou fraude</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Produtos possivelmente falsificados')">
+                <span class="report-option-text">Produtos possivelmente falsificados</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Segurança de criança ou menor')">
+                <span class="report-option-text">Segurança de criança ou menor</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+            <li class="report-option" onclick="openReportModal('Outro')">
+                <span class="report-option-text">Outro</span>
+                <span class="report-option-arrow">›</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Modal de Denúncia -->
+    <div class="report-modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeReportModal()">←</button>
+                <h2 class="modal-title">Denunciar</h2>
+            </div>
+            <div class="modal-body">
+                <div class="reason-section">
+                    <span class="reason-label">Motivo</span>
+                    <div class="reason-text" id="selectedReason">Munição e armas</div>
+                </div>
+                
+                <div class="description-section">
+                    <label class="description-label" for="reportDescription">Descrição (opcional)</label>
+                    <textarea 
+                        class="description-textarea" 
+                        id="reportDescription" 
+                        placeholder="Forneça mais detalhes sobre o problema"
+                        maxlength="300"
+                        oninput="updateCharCount()"
+                    ></textarea>
+                    <div class="char-count" id="charCount">0/300</div>
+                </div>
+                
+                <p class="warning-text">
+                    Se você souber de alguém que esteja em risco físico imediato, entre em contato imediatamente com a polícia local.
+                </p>
+                
+                <button class="report-button" id="reportButton" onclick="submitReport()">Denunciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentReason = '';
+        
+        function openReportModal(reason) {
+            currentReason = reason;
+            document.getElementById('selectedReason').textContent = reason;
+            document.getElementById('reportDescription').value = '';
+            document.getElementById('charCount').textContent = '0/300';
+            document.getElementById('charCount').classList.remove('limit');
+            document.getElementById('reportModal').style.display = 'flex';
+        }
+        
+        function closeReportModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+        
+        function updateCharCount() {
+            const textarea = document.getElementById('reportDescription');
+            const charCount = document.getElementById('charCount');
+            const count = textarea.value.length;
+            
+            charCount.textContent = `${count}/300`;
+            
+            if (count >= 280) {
+                charCount.classList.add('limit');
+            } else {
+                charCount.classList.remove('limit');
+            }
+        }
+        
+        function submitReport() {
+            const description = document.getElementById('reportDescription').value;
+            alert(`Denúncia enviada!\nMotivo: ${currentReason}\nDescrição: ${description || 'Nenhuma descrição fornecida'}`);
+            closeReportModal();
+        }
+        
+        // Fechar modal ao clicar fora do conteúdo
+        document.getElementById('reportModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReportModal();
+            }
+        });
+    </script>
+</body>
+</html>

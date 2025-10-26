@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Aura Parfum</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Reset e largura mobile-first */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+    @font-face { font-family: 'TikTokFont'; src: url('../fonts/TikTokFont-Regular.woff2') format('woff2'), url('../fonts/TikTokFont-Regular.woff') format('woff'); font-weight:400; font-style:normal; font-display:swap; }
+    @font-face { font-family: 'TikTokFont'; src: url('../fonts/TikTokFont-Semibold.woff2') format('woff2'), url('../fonts/TikTokFont-Semibold.woff') format('woff'); font-weight:600; font-style:normal; font-display:swap; }
+    @font-face { font-family: 'TikTokDisplayFont'; src: url('../fonts/TikTokDisplayFont-Bold.woff2') format('woff2'), url('../fonts/TikTokDisplayFont-Bold.woff') format('woff'); font-weight:700; font-style:normal; font-display:swap; }
+    body { font-family: 'TikTokFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#fff; color:#111; }
+    /* Conteúdo centralizado com largura 20% maior */
+    .app { width: 100%; max-width: 516px; margin: 0 auto; background:#fff; }
+    img, svg, video { max-width: 100%; height: auto; }
+    .shadow-hairline { box-shadow: inset 0 -1px 0 0 rgba(0,0,0,.06); }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+    .price { font-family: 'TikTokDisplayFont', 'TikTokFont', sans-serif; }
+    .tab-active { border-bottom: 2px solid #111; color:#111; font-weight:600; }
+  .truncate-2 { display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+    .search-wrapper { display:flex; align-items:center; gap:8px; background:#f3f4f6; border-radius:12px; padding:0 12px; height:36px; color:#9ca3af; }
+    .search-wrapper:focus-within { background:#e5e7eb; }
+    .search-wrapper .search-icon { font-size:14px; line-height:1; }
+    .search-wrapper input { flex:1; border:none; background:transparent; outline:none; font-size:14px; color:#111; padding:0; }
+    .search-wrapper input::placeholder { color:#9ca3af; }
+
+    /* Botões Seguir e Mensagem (iguais ao print) */
+    .btn { height: 28px; min-width: 110px; border-radius: 7px; font-weight: 700; font-size: 12.6px; display:inline-flex; align-items:center; justify-content:center; }
+    .btn-follow { background:#fe2c55; color:#fff; border:none; }
+    .btn-follow.is-following { background:#e5e7eb; color:#374151; border:1px solid #d1d5db; }
+    .btn-message { background:#fff; border:1px solid #e6e6e6; color:#111; }
+
+    /* Efeito de ticket no banner do cupom */
+    .cupom { position: relative; border-radius: 12px; border: 1px solid #f0f2f5; }
+    .cupom::before,
+    .cupom::after { content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: var(--background, #ffffff); top: 50%; transform: translateY(-50%); }
+    .cupom::before { left: -5px; }
+    .cupom::after { right: -5px; }
+
+    /* Botão duplo: carrinho + comprar (grudados) */
+    .buy-group { display: inline-flex; align-items: center; border-radius: 6px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
+    .btn-cart { width: 44px; height: 36px; background: #fde8ee; color: #e7325d; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-buy  { height: 36px; background: #e7325d; color: #fff; font-weight: 800; font-size: 14px; padding: 0 16px; border-left: 1px solid #f7cbd6; }
+    .btn-buy:active, .btn-cart:active { transform: translateY(0.5px); }
+    /* Utilitário: esconder scrollbar para carrosséis */
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    /* Medalhas de ranking simples */
+    .rank-badge { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:12px; font-weight:700; color:#6b7280; background:#f3f4f6; border-radius:6px; }
+    .rank-1 { background:#fde68a; color:#92400e; }
+    .rank-2 { background:#e5e7eb; color:#4b5563; }
+    .rank-3 { background:#fcd5b5; color:#9a3412; }
+    /* Badge de ranking hexagonal */
+    .badge-rank { position:absolute; top:8px; left:8px; width:26px; height:28px; clip-path: polygon(25% 0%, 75% 0%, 100% 37%, 75% 100%, 25% 100%, 0% 37%); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#333; }
+    .rank-gold { background:#FFD700; }
+    .rank-silver { background:#C0C0C0; }
+    .rank-bronze { background:#CD7F32; }
+    /* Imagem quadrada do produto (principais) */
+    .product-media { width:100%; height:170px; border-radius: 6px; overflow: hidden; }
+    .product-media img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px !important; }
+    /* Tipografia e badges para Principais produtos */
+    .product-title { font-size: 13px; font-weight: 700; color:#000; margin-top:0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .price-row { display:flex; align-items:baseline; gap:8px; margin-top:0.25rem; }
+    .price-current { color:#d32f2f; font-weight:700; font-size:15px; line-height:1.1; }
+    .price-old { color:#999; font-size:12px; text-decoration: line-through; }
+    .discount-badge { background:#f44336; color:#fff; font-weight:700; font-size:11px; border-radius:4px; padding:2px 6px; display:inline-block; margin-top:0.25rem; }
+    .sold-count { display:block; margin-top:0.25rem; font-size:12px; color:#666; }
+    /* Altura fixa para mídia dos cards recomendados */
+    .recom-media { height: 260px; border-radius: var(--img-radius, 6px); /* 6px corners */ overflow: hidden; }
+    /* Hooks para ajustes finos das imagens recomendadas */
+    .img-config-container { border-radius: var(--img-radius, 6px); }
+    .img-config { border-radius: var(--img-radius, 6px); }
+    /* Utilitários de raio de borda (aplicar no card .rec-card,
+       no container .img-config-container ou diretamente na imagem .img-config) */
+    .img-radius-none { --img-radius: 0px; }
+    .img-radius-sm { --img-radius: 4px; }
+    .img-radius-md { --img-radius: 6px; }
+    .img-radius-lg { --img-radius: 10px; }
+    .img-radius-xl { --img-radius: 16px; }
+    .img-radius-2xl { --img-radius: 20px; }
+    .img-radius-full { --img-radius: 9999px; }
+    .rec-card .title { font-size: 13px; font-weight: 600; color: #000; margin-top: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rec-card .price-row { display: flex; align-items: baseline; gap: 8px; margin-top: 0.25rem; }
+    .rec-card .price-current { color: #d32f2f; font-weight: 700; font-size: 15px; line-height: 1.1; }
+    .rec-card .price-old { color: #999; font-size: 12px; text-decoration: line-through; }
+    .rec-card .badges { display: flex; gap: 4px; margin-top: 0.25rem; }
+    .rec-card .badge-red { background: #f44336; color: #fff; font-size: 11px; border-radius: 4px; padding: 2px 6px; display: inline-block; }
+    .rec-card .badge-teal { background: #00c4a7; color: #fff; font-size: 11px; border-radius: 4px; padding: 2px 6px; display: inline-block; }
+    .rec-card .sold { display: block; margin-top: 0.25rem; font-size: 12px; color: #666; text-transform: none; }
+    /* Imagem ocupa todo o quadrado cinza do card recomendado */
+    .recom-img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: var(--img-radius, 6px); }
+
+    .cart-count-badge { position:absolute; top:-6px; right:-8px; background:#ff2d55; color:#fff; border-radius:999px; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; }
+    .share-overlay,
+    .complaint-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; display:none; opacity:0; transition:opacity 0.3s ease-in-out; pointer-events:none; touch-action:none; }
+    .share-overlay.active,
+    .complaint-overlay.active { opacity:1; pointer-events:auto; touch-action:none; }
+    .share-section,
+    .complaint-section { position:fixed; bottom:0; left:0; right:0; background:#fff; border-radius:20px 20px 0 0; padding:20px; transform:translateY(100%); transition:transform 0.3s ease-in-out; z-index:10001; display:none; pointer-events:auto; touch-action:pan-y; }
+    .share-section.active,
+    .complaint-section.active { transform:translateY(0); }
+    .share-header,
+    .complaint-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid #f0f0f0; }
+    .share-title,
+    .complaint-title { font-family:'TikTokFont',sans-serif; font-size:16px; font-weight:600; color:#333; }
+    .share-close,
+    .complaint-close { background:none; border:none; font-size:24px; color:#666; cursor:pointer; padding:5px; }
+    .share-options,
+    .complaint-options { display:flex; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; gap:6px; margin-bottom:20px; }
+    .share-option,
+    .complaint-option { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; padding:10px; border-radius:12px; transition:background-color 0.2s; }
+    .share-option:hover,
+    .complaint-option:hover { background-color:#f8f9fa; }
+    .share-icon,
+    .complaint-icon { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; }
+    .share-icon.whatsapp,
+    .complaint-icon.whatsapp { background:#25D366; }
+    .share-icon.copy { background:#1877F2; }
+    .share-icon.facebook { background:#1877F2; }
+    .share-icon.twitter { background:#1DA1F2; }
+    .share-icon.telegram { background:#0088cc; }
+    .share-label { font-family:'TikTokFont',sans-serif; font-size:12px; color:#666; text-align:center; }
+    .share-cancel { background:#f0f0f0; border:none; padding:15px; border-radius:12px; font-family:'TikTokFont',sans-serif; font-size:16px; font-weight:600; color:#333; width:100%; cursor:pointer; transition:background-color 0.2s; }
+    .share-cancel:hover { background:#e0e0e0; }
+  
+  </style>
+
+  <!-- CSS de tema apenas para a página Loja (adaptado do exemplo) -->
+  <style id="loja-page-css">
+    :root {
+      --font-size: 16px;
+      --background: #ffffff;
+      --foreground: oklch(0.145 0 0);
+      --card: #ffffff;
+      --card-foreground: oklch(0.145 0 0);
+      --popover: oklch(1 0 0);
+      --popover-foreground: oklch(0.145 0 0);
+      --primary: #030213;
+      --primary-foreground: oklch(1 0 0);
+      --secondary: oklch(0.95 0.0058 264.53);
+      --secondary-foreground: #030213;
+      --muted: #ececf0;
+      --muted-foreground: #717182;
+      --accent: #e9ebef;
+      --accent-foreground: #030213;
+      --destructive: #d4183d;
+      --destructive-foreground: #ffffff;
+      --border: rgba(0, 0, 0, 0.1);
+      --input: transparent;
+      --input-background: #f3f3f5;
+      --switch-background: #cbced4;
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --ring: oklch(0.708 0 0);
+      --chart-1: oklch(0.646 0.222 41.116);
+      --chart-2: oklch(0.6 0.118 184.704);
+      --chart-3: oklch(0.398 0.07 227.392);
+      --chart-4: oklch(0.828 0.189 84.429);
+      --chart-5: oklch(0.769 0.188 70.08);
+      --radius: 0.625rem;
+      --sidebar: oklch(0.985 0 0);
+      --sidebar-foreground: oklch(0.145 0 0);
+      --sidebar-primary: #030213;
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.97 0 0);
+      --sidebar-accent-foreground: oklch(0.205 0 0);
+      --sidebar-border: oklch(0.922 0 0);
+      --sidebar-ring: oklch(0.708 0 0);
+    }
+    .dark {
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.145 0 0);
+      --card-foreground: oklch(0.985 0 0);
+      --popover: oklch(0.145 0 0);
+      --popover-foreground: oklch(0.985 0 0);
+      --primary: oklch(0.985 0 0);
+      --primary-foreground: oklch(0.205 0 0);
+      --secondary: oklch(0.269 0 0);
+      --secondary-foreground: oklch(0.985 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --accent: oklch(0.269 0 0);
+      --accent-foreground: oklch(0.985 0 0);
+      --destructive: oklch(0.396 0.141 25.723);
+      --destructive-foreground: oklch(0.637 0.237 25.331);
+      --border: oklch(0.269 0 0);
+      --input: oklch(0.269 0 0);
+      --ring: oklch(0.439 0 0);
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --chart-1: oklch(0.488 0.243 264.376);
+      --chart-2: oklch(0.696 0.17 162.48);
+      --chart-3: oklch(0.769 0.188 70.08);
+      --chart-4: oklch(0.627 0.265 303.9);
+      --chart-5: oklch(0.645 0.246 16.439);
+      --sidebar: oklch(0.205 0 0);
+      --sidebar-foreground: oklch(0.985 0 0);
+      --sidebar-primary: oklch(0.488 0.243 264.376);
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.269 0 0);
+      --sidebar-accent-foreground: oklch(0.985 0 0);
+      --sidebar-border: oklch(0.269 0 0);
+      --sidebar-ring: oklch(0.439 0 0);
+    }
+    html { font-size: var(--font-size); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Top bar with back and search -->
+    <div class="sticky top-0 z-20 bg-white shadow-hairline">
+      <div class="flex items-center gap-3 px-4 py-3">
+        <a href="index.html" class="text-2xl" aria-label="Voltar para a página inicial">‹</a>
+        <div class="flex-1">
+          <form class="search-wrapper" role="search" data-search-form data-search-target="produtos.html">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="search" data-search-input placeholder="Pesquisar produtos" aria-label="Pesquisar produtos" autocomplete="off" enterkeyhint="search">
+          </form>
+        </div>
+        <div class="text-2xl">↗︎</div>
+        <a href="../carrinho/" class="relative text-2xl" aria-label="Ir para o carrinho">
+          🛒
+          <span id="cart-count-header" class="cart-count-badge">0</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Header loja -->
+    <div class="px-4 pt-2 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <div class="w-16 h-16 rounded-full border-2 border-pink-500 p-0.5">
+            <img src="../images/logotipo.png" class="w-full h-full rounded-full object-cover" alt="logo loja"/>
+          </div>
+          <div class="absolute -bottom-1 -right-1 bg-pink-500 text-white text-[10px] rounded-full px-1.5 py-0.5">📈</div>
+        </div>
+        <div class="flex-1">
+          <div class="font-semibold text-[18px]">Aura Parfum</div>
+          <div class="text-gray-500 text-sm">51.8K vendido(s)</div>
+        </div>
+        <div class="flex flex-col gap-2 items-end">
+          <button class="btn btn-follow" type="button" aria-pressed="false">Seguir</button>
+          <button class="btn btn-message" onclick="window.location.href='../chat/index1.html'">Mensagem</button>
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2 text-pink-500 text-sm">
+        <div>📅</div>
+        <div class="font-semibold">Evento LIVE: 10 de nov, 13:30</div>
+      </div>
+
+      <div class="cupom mt-3 bg-[#f6fbfb] rounded-xl px-4 py-[0.4375rem] flex items-center justify-between">
+        <div>
+          <div class="font-semibold text-gray-800 text-sm">Cupom de envio</div>
+          <div class="text-gray-500 text-sm -mt-0.5">em pedidos acima de<br/>R$ 29</div>
+        </div>
+        <button class="bg-teal-500 text-white font-semibold rounded-lg px-[0.9rem] py-[0.315rem] text-[0.79rem]">Resgatar</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex text-gray-500 text-[15px] bg-white shadow-hairline">
+      <a href="index.html" class="flex-1 text-center py-3 tab-active">Página inicial</a>
+      <a href="produtos.html" class="flex-1 text-center py-3">Produtos</a>
+      <a href="categorias.html" class="flex-1 text-center py-3">Categorias</a>
+    </div>
+
+    <!-- Principais produtos (grid 3 colunas) -->
+    <div class="px-4 pt-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-[18px] font-semibold">Principais produtos</h2>
+        <a href="#" class="text-xl text-gray-500" aria-label="Ver mais">›</a>
+      </div>
+      <div id="featured-products" class="mt-2 grid grid-cols-3 gap-[0.4rem]"></div>
+    </div>
+
+    <!-- Recomendado para você -->
+    <div class="px-4 pt-4">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <span class="h-[3px] w-10 bg-rose-500 rounded-full"></span>
+        <h2 class="text-[17px] font-semibold text-center">Recomendado para você</h2>
+        <span class="h-[3px] w-10 bg-rose-500 rounded-full"></span>
+      </div>
+      <div id="recommended-products" class="grid grid-cols-2 gap-[0.4rem]"></div>
+    </div>
+
+    
+  </div>
+  <script type="module">
+    import { renderFeatured, renderRecommended } from '../js/storefront.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFeatured('#featured-products');
+      renderRecommended('#recommended-products');
+    });
+  </script>
+  <script src="../js/product-linker.js"></script>
+  <script src="../js/global-search.js"></script>
+  <script>
+    const FOLLOW_KEY = 'aura-following';
+    const CART_KEY = 'tiktokShopCart';
+    let cartSyncIntervalId = null;
+
+    function applyFollowState(following) {
+      document.querySelectorAll('.btn-follow').forEach(function(btn) {
+        btn.classList.toggle('is-following', following);
+        btn.textContent = following ? 'Seguindo' : 'Seguir';
+        btn.setAttribute('aria-pressed', String(following));
+      });
+    }
+
+    function getCart() {
+      const stored = localStorage.getItem(CART_KEY);
+      try { return stored ? JSON.parse(stored) : []; } catch { return []; }
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const totalItems = cart.reduce(function(total, item) {
+        const quantity = Number(item?.quantity || item?.qty || 0);
+        return total + (Number.isFinite(quantity) && quantity > 0 ? quantity : 1);
+      }, 0);
+
+      document.querySelectorAll('#cart-count-header').forEach(function(el) {
+        el.textContent = totalItems;
+      });
+    }
+
+    function addToCart(productData) {
+      const cart = getCart();
+      const existingItem = cart.find(item => item.id === productData.id);
+      
+      if (existingItem) {
+        existingItem.quantity = (existingItem.quantity || 1) + 1;
+      } else {
+        cart.push({
+          id: productData.id,
+          name: productData.name,
+          price: productData.price,
+          priceLabel: productData.priceLabel, // Formatação original do preço
+          oldPrice: productData.oldPrice,
+          oldPriceLabel: productData.oldPriceLabel, // Formatação original do preço taxado
+          image: productData.image,
+          quantity: 1
+        });
+      }
+      
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartCount();
+      
+      // Mostrar feedback visual
+      const button = event.target.closest('.btn-cart');
+      if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = '✓';
+        button.style.backgroundColor = '#4CAF50';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.backgroundColor = '';
+        }, 1000);
+      }
+    }
+
+    function startCartSync() {
+      if (cartSyncIntervalId !== null) return;
+      cartSyncIntervalId = window.setInterval(updateCartCount, 1000);
+      window.addEventListener('focus', updateCartCount);
+      window.addEventListener('pageshow', updateCartCount);
+      window.addEventListener('storage', function(evt) {
+        if (evt.key === CART_KEY) {
+          updateCartCount();
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      let following = localStorage.getItem(FOLLOW_KEY) === 'true';
+      applyFollowState(following);
+
+      document.querySelectorAll('.btn-follow').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          following = !btn.classList.contains('is-following');
+          localStorage.setItem(FOLLOW_KEY, following);
+          applyFollowState(following);
+        });
+      });
+
+      // Adicionar event listeners aos botões de carrinho
+      document.querySelectorAll('.btn-cart').forEach(function(btn, index){
+        btn.addEventListener('click', function(event){
+          const productCard = btn.closest('.product-card');
+          if (!productCard) return;
+          
+          const title = productCard.querySelector('.title')?.textContent?.trim() || '';
+          const priceCurrentEl = productCard.querySelector('.price-current');
+          const priceOldEl = productCard.querySelector('.price-old');
+          const imageEl = productCard.querySelector('.product-img');
+          
+          // Extrair preços mantendo formatação original
+          const priceCurrentText = priceCurrentEl?.textContent?.trim() || '';
+          const priceOldText = priceOldEl?.textContent?.trim() || '';
+          
+          // Converter para números para cálculos
+          const currentPrice = parseFloat(priceCurrentText.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+          const oldPrice = parseFloat(priceOldText.replace(/[^0-9,]/g, '').replace(',', '.')) || 0;
+          
+          const productData = {
+            id: 'produto-home-' + index + '-' + Date.now(),
+            name: title,
+            price: currentPrice,
+            priceLabel: priceCurrentText, // Manter formatação original
+            oldPrice: oldPrice > currentPrice ? oldPrice : null,
+            oldPriceLabel: oldPrice > currentPrice ? priceOldText : null, // Manter formatação original
+            image: imageEl?.src || '../images/ndaq.png'
+          };
+          
+          addToCart(productData);
+        });
+      });
+
+      updateCartCount();
+      startCartSync();
+    });
+
+    window.updateCartCount = updateCartCount;
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{
+  "id": "bare-vanilla",
+  "pagePath": "index.html",
+  "title": "Body Splash Victoria's Secret Bare Vanilla 250ml",
+  "subtitle": "Fragrância doce de baunilha com hidratação leve",
+  "price": "R$ 35,97",
+  "priceValue": 35.97,
+  "oldPrice": "R$ 179,83",
+  "discount": "-80%",
+  "badge": "Oferta Relâmpago",
+  "rating": 4.7,
+  "ratingCount": 204,
+  "ratingText": "4.7 (204) 4473 vendidos",
+  "soldText": "4473 vendidos",
+  "storeSoldText": "51.8K vendidos",
+  "gallery": [
+    {
+      "src": "images/test.png",
+      "alt": "Body Splash Bare Vanilla 250ml"
+    }
+  ],
+  "descriptionBlocks": [
+    {
+      "type": "paragraph",
+      "text": "Body Splash Victoria's Secret é a sensação para todas as mulheres e excelente para qualquer época do ano. Body Splash é como se fosse um perfume, porém possui menor concentração de essência. Ele pode ser aplicado em todo o corpo, várias vezes ao longo do dia, proporcionando suavidade no cheiro e pele macia e hidratada."
+    },
+    {
+      "type": "heading",
+      "text": "Características"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Quantidade: Body Splash Victoria's Secret Bare Vanilla 250ml"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Cuidados Especiais"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Manter fora do alcance de crianças.",
+        "Conservar em local fresco, seco e ao abrigo da luz solar direta.",
+        "Evitar contato com os olhos e mucosas.",
+        "Uso externo. Não ingerir.",
+        "Em caso de irritação, suspender o uso imediatamente.",
+        "Manter o frasco bem fechado após o uso.",
+        "Inflamável: manter afastado de fontes de calor e chamas."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Garantia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em caso de demora na entrega ou defeitos de fábrica, entre em contato com o suporte imediatamente para solicitar a devolução do dinheiro."
+    }
+  ],
+  "recommendations": [
+    "bare-vanilla-lotion",
+    "pure-seduction",
+    "love-spell",
+    "kit-vanilla"
+  ],
+  "buyPath": "carrinho/",
+  "collections": [
+    "product-page"
+  ],
+  "description": "Body Splash com fragrância adocicada de baunilha cremosa que perfuma o corpo e reforça a hidratação leve."
+}

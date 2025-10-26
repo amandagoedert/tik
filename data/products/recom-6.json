@@ -1,0 +1,17 @@
+{
+  "id": "recom-6",
+  "title": "Ácido Glicólico 30g",
+  "price": "R$ 51,72",
+  "oldPrice": "R$ 84,20",
+  "image": "images/vs6.png",
+  "buy": "#",
+  "sold": "9.2k vendido(s)",
+  "collections": [
+    "recommended"
+  ],
+  "badges": [
+    "10% OFF"
+  ],
+  "soldText": "9.2k vendido(s)",
+  "description": "Ácido Glicólico 30g promove esfoliação química suave e melhora a textura da pele."
+}
