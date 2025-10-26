@@ -798,10 +798,11 @@
       return apiUrl;
     }
     
-    // Se estamos no Vercel/produção
+    // Se estamos no Vercel/produção, tentar múltiplas rotas
     if (currentOrigin.includes('vercel.app') || currentOrigin.includes('tikt-ten.vercel.app')) {
+      // Primeira opção: rota direta para checkout
       const apiUrl = `${currentOrigin}/checkout/${path}`;
-      console.log(`🔗 API URL (Vercel): ${apiUrl}`);
+      console.log(`🔗 API URL (Vercel - primary): ${apiUrl}`);
       return apiUrl;
     }
     
@@ -812,6 +813,38 @@
     
     console.log(`🔗 API URL (Fallback): ${apiUrl}`);
     return apiUrl;
+  }
+
+  // Função auxiliar para tentar múltiplas URLs da API
+  async function tryApiRequest(path, options) {
+    const urls = [
+      buildApiUrl(path),  // Rota principal
+      `${window.location.origin}/api/checkout.php`, // Rota alternativa para Vercel
+      `${window.location.origin}/checkout/${path}` // Rota direta
+    ];
+    
+    let lastError = null;
+    
+    for (const url of urls) {
+      try {
+        console.log(`🔄 Tentando API URL: ${url}`);
+        const response = await fetch(url, options);
+        
+        if (response.ok || response.status < 500) {
+          console.log(`✅ API URL funcionou: ${url}`);
+          return response;
+        }
+        
+        console.warn(`⚠️ API URL retornou ${response.status}: ${url}`);
+        lastError = new Error(`HTTP ${response.status}`);
+        
+      } catch (error) {
+        console.warn(`❌ Erro na API URL ${url}:`, error.message);
+        lastError = error;
+      }
+    }
+    
+    throw lastError || new Error('Todas as rotas da API falharam');
   }
 
   // ===== FUNÇÕES ORIGINAIS DO CHECKOUT =====
@@ -930,9 +963,8 @@
 
     try {
       persistCurrentCustomerInfo();
-      const apiEndpoint = buildApiUrl("api.php");
-      console.log("Endpoint TriboPay API:", apiEndpoint);
-      const response = await fetch(apiEndpoint, {
+      
+      const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -951,7 +983,10 @@
           address_zipcode: cep,
           payment_method: "pix"
         })
-      });
+      };
+      
+      console.log("🚀 Iniciando requisição para API TriboPay...");
+      const response = await tryApiRequest("api.php", requestOptions);
 
       const contentType = response.headers.get("content-type") || "";
       const rawBody = await response.text();

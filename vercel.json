@@ -1,38 +1,13 @@
 {
   "functions": {
-    "checkout/api.php": {
-      "runtime": "@vercel/php@0.6.0"
-    },
-    "checkout/verifica.php": {
-      "runtime": "@vercel/php@0.6.0"
-    },
-    "checkout/webhook.php": {
-      "runtime": "@vercel/php@0.6.0"
-    },
-    "checkout/debug_deploy.php": {
-      "runtime": "@vercel/php@0.6.0"
+    "checkout/*.php": {
+      "runtime": "@vercel/php@0.7.0"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/checkout/api.php",
-      "dest": "/checkout/api.php",
-      "methods": ["POST", "OPTIONS"]
-    },
-    {
-      "src": "/checkout/verifica.php",
-      "dest": "/checkout/verifica.php",
-      "methods": ["GET", "POST", "OPTIONS"]
-    },
-    {
-      "src": "/checkout/webhook.php",
-      "dest": "/checkout/webhook.php",
-      "methods": ["POST", "OPTIONS"]
-    },
-    {
-      "src": "/checkout/debug_deploy.php",
-      "dest": "/checkout/debug_deploy.php",
-      "methods": ["GET", "POST", "OPTIONS"]
+      "source": "/api/(.*)",
+      "destination": "/checkout/api.php"
     }
   ],
   "headers": [
@@ -45,11 +20,15 @@
         },
         {
           "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
         },
         {
           "key": "Access-Control-Allow-Headers",
           "value": "Content-Type, Authorization, X-Requested-With, Origin"
+        },
+        {
+          "key": "Access-Control-Max-Age",
+          "value": "86400"
         }
       ]
     }
