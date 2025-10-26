@@ -5,12 +5,25 @@ require_once __DIR__ . '/tribopay_log.php';
 
 const TRIBOPAY_ENDPOINT = 'https://api.tribopay.com.br/api/public/v1/transactions';
 
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
-$allowedOrigin = $origin !== '' ? $origin : '*';
-header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+// Configuração CORS mais permissiva para desenvolvimento
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+    'http://127.0.0.1:8888',
+    'http://localhost:8888',
+    'https://tikt-ten.vercel.app'
+];
+
+if (in_array($origin, $allowedOrigins) || $origin === '') {
+    header('Access-Control-Allow-Origin: ' . ($origin ?: '*'));
+} else {
+    header('Access-Control-Allow-Origin: *');
+}
 header('Vary: Origin');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Methods: POST, OPTIONS, GET');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Origin');
+header('Access-Control-Max-Age: 86400');
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     http_response_code(204);

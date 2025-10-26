@@ -103,35 +103,53 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
     .qrcode {
       display: flex;
       justify-content: center;
-      margin: 15px 0;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px dashed #f53d5c;
     }
 
     .qrcode img {
-      max-width: 80%;
+      max-width: 200px;
       height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .pix-input {
       display: flex;
-      margin: 10px 0;
+      margin: 15px 0;
       width: 100%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .pix-input input {
       flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px 0 0 8px;
-      font-size: 14px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-right: none;
+      font-size: 12px;
+      font-family: monospace;
+      background: #f8f9fa;
+      color: #495057;
     }
 
     .pix-input button {
-      padding: 8px 12px;
+      padding: 12px 16px;
       border: none;
-      background: #eee;
+      background: #f53d5c;
+      color: white;
       cursor: pointer;
-      border-radius: 0 8px 8px 0;
       font-size: 14px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .pix-input button:hover {
+      background: #e02d49;
     }
 
     .confirm-btn {
@@ -265,33 +283,48 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
       <h1>Pague o Pix</h1>
       <div class="transacao">Transação: <strong><?php echo htmlspecialchars($transacao); ?></strong></div>
 
-      <h2><?php echo htmlspecialchars($nome); ?>,</h2>
-      <p><strong>Siga os passos abaixo para pagar:</strong></p>
-      <p>(1) Copie a chave PIX abaixo</p>
-      <p>(2) Abra o aplicativo do seu banco e entre na opção PIX</p>
-      <p>(3) Escolha a opção Pagar =&gt; Pix copia e cola</p>
-      <p>(4) Depois, confirme o pagamento.</p>
+      <h2>Olá, <?php echo htmlspecialchars($nome); ?>! 👋</h2>
+      
+      <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #007bff;">
+        <p style="margin: 0 0 10px 0;"><strong>📱 Como pagar com PIX:</strong></p>
+        <ol style="margin: 0; padding-left: 20px;">
+          <li>Escaneie o QR Code <strong>OU</strong> copie o código PIX</li>
+          <li>Abra o app do seu banco</li>
+          <li>Vá em <strong>PIX → Pagar</strong></li>
+          <li>Cole o código ou use a câmera para o QR Code</li>
+          <li>Confirme o pagamento</li>
+        </ol>
+      </div>
 
       <div class="status" id="statusPagamento">Aguardando pagamento ⏳</div>
 
       <!-- QR Code -->
       <div class="qrcode">
-        <?php if ($qrcode): ?>
-          <img src="<?php echo htmlspecialchars($qrcode); ?>" alt="QR Code">
+        <?php if ($chavePix): ?>
+          <!-- Gerar QR Code usando API online -->
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($chavePix); ?>" alt="QR Code PIX" style="max-width: 200px; height: auto;">
+        <?php elseif ($qrcode): ?>
+          <!-- Se vier uma imagem direta -->
+          <img src="<?php echo htmlspecialchars($qrcode); ?>" alt="QR Code PIX" style="max-width: 200px; height: auto;">
         <?php else: ?>
           <p style="color:#999;">QR Code não disponível</p>
         <?php endif; ?>
       </div>
 
-      <p>Copie a chave pix</p>
+      <?php if ($chavePix): ?>
+        <p><strong>Escaneie o QR Code acima com seu banco ou copie o código PIX abaixo:</strong></p>
+        
+        <!-- Chave PIX -->
+        <div class="pix-input">
+          <input type="text" id="pix-chave" value="<?php echo htmlspecialchars($chavePix); ?>" readonly style="font-size: 12px;">
+          <button onclick="copiarChave()" id="botao-copiar">Copiar</button>
+        </div>
 
-      <!-- Chave PIX -->
-      <div class="pix-input">
-        <input type="text" id="pix-chave" value="<?php echo htmlspecialchars($chavePix); ?>" readonly>
-        <button onclick="copiarChave()">Copiar</button>
-      </div>
-
-      <button class="confirm-btn" onclick="copiarChave()">✔ Confirmar Pagamento</button>
+        <button class="confirm-btn" onclick="copiarChave()">📋 Copiar Código PIX</button>
+      <?php else: ?>
+        <p style="color:#f53d5c;">⚠️ Código PIX não foi gerado. Tente novamente.</p>
+        <button class="confirm-btn" onclick="window.history.back()">← Voltar</button>
+      <?php endif; ?>
     </div>
 
     <!-- Itens da compra -->
@@ -351,13 +384,72 @@ $valor_formatado = number_format($total_produtos, 2, ',', '.');
   </div>
 
   <script>
-    function copiarChave() {
+    async function copiarChave() {
       const input = document.getElementById("pix-chave");
-      input.select();
-      input.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("Chave PIX copiada!");
+      const botao = document.getElementById("botao-copiar");
+      
+      try {
+        // Método moderno para copiar
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(input.value);
+        } else {
+          // Fallback para navegadores antigos
+          input.select();
+          input.setSelectionRange(0, 99999);
+          document.execCommand("copy");
+        }
+        
+        // Feedback visual
+        const textoOriginal = botao.innerText;
+        botao.innerText = "✅ Copiado!";
+        botao.style.background = "#28a745";
+        
+        setTimeout(() => {
+          botao.innerText = textoOriginal;
+          botao.style.background = "";
+        }, 2000);
+        
+        // Mostrar notificação
+        mostrarNotificacao("Código PIX copiado com sucesso!", "success");
+        
+      } catch (err) {
+        console.error("Erro ao copiar:", err);
+        mostrarNotificacao("Erro ao copiar. Selecione o texto manualmente.", "error");
+      }
     }
+    
+    function mostrarNotificacao(mensagem, tipo) {
+      const notificacao = document.createElement('div');
+      notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+        ${tipo === 'success' ? 'background: #28a745;' : 'background: #dc3545;'}
+      `;
+      notificacao.textContent = mensagem;
+      
+      document.body.appendChild(notificacao);
+      
+      setTimeout(() => {
+        notificacao.remove();
+      }, 3000);
+    }
+    
+    // CSS para animação
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
 
     const DEFAULT_API_BASE = '/checkout/';
     const API_BASE_OVERRIDE = (window.CHECKOUT_API_BASE_URL || document.body?.dataset?.apiBase || '').trim();

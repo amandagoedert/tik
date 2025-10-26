@@ -680,6 +680,14 @@
         console.warn('API base override inválida:', API_BASE_OVERRIDE, err);
       }
     }
+    
+    // Auto-detectar URL da API baseado na origem atual
+    const currentOrigin = window.location.origin;
+    if (currentOrigin.includes('127.0.0.1:5500') || currentOrigin.includes('localhost:5500')) {
+      // Se estamos no Live Server, usar a mesma porta
+      return `${currentOrigin}/checkout/${path}`;
+    }
+    
     return path;
   }
 
@@ -818,8 +826,9 @@
         throw new Error(message);
       }
 
-      const qrCodeImage = data.qr_code_image_url || data.qrcode_image_url || null;
-      const pixPayload = data.pix_copy_paste || data.qrcode || null;
+      // Extrair dados do PIX da resposta TriboPay
+      const qrCodeImage = data.pix?.qr_code_base64 || data.qr_code_image_url || data.qrcode_image_url || null;
+      const pixPayload = data.pix?.pix_qr_code || data.pix?.pix_url || data.pix_copy_paste || data.qrcode || null;
 
       if (qrCodeImage || pixPayload) {
         const transactionHash = data.hash || `${Date.now()}`;
