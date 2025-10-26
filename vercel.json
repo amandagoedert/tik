@@ -1,36 +1,13 @@
 {
   "functions": {
-    "checkout/*.php": {
+    "api/checkout.php": {
+      "runtime": "@vercel/php@0.7.0"
+    },
+    "checkout/api.php": {
+      "runtime": "@vercel/php@0.7.0"
+    },
+    "checkout/verifica.php": {
       "runtime": "@vercel/php@0.7.0"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/checkout/api.php"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/checkout/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization, X-Requested-With, Origin"
-        },
-        {
-          "key": "Access-Control-Max-Age",
-          "value": "86400"
-        }
-      ]
-    }
-  ]
+  }
 }
