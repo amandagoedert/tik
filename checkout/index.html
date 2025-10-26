@@ -783,12 +783,35 @@
     
     // Auto-detectar URL da API baseado na origem atual
     const currentOrigin = window.location.origin;
+    const currentPath = window.location.pathname;
+    
+    console.log(`🔍 Detectando API URL:
+      Origin: ${currentOrigin}
+      Path: ${currentPath}
+      Target: ${path}
+    `);
+    
+    // Se estamos no desenvolvimento local
     if (currentOrigin.includes('127.0.0.1:5500') || currentOrigin.includes('localhost:5500')) {
-      // Se estamos no Live Server, usar a mesma porta
-      return `${currentOrigin}/checkout/${path}`;
+      const apiUrl = `${currentOrigin}/checkout/${path}`;
+      console.log(`🔗 API URL (Local): ${apiUrl}`);
+      return apiUrl;
     }
     
-    return path;
+    // Se estamos no Vercel/produção
+    if (currentOrigin.includes('vercel.app') || currentOrigin.includes('tikt-ten.vercel.app')) {
+      const apiUrl = `${currentOrigin}/checkout/${path}`;
+      console.log(`🔗 API URL (Vercel): ${apiUrl}`);
+      return apiUrl;
+    }
+    
+    // Fallback: construir URL relativa à pasta checkout
+    const apiUrl = currentPath.includes('/checkout/') 
+      ? `${currentOrigin}${currentPath.replace(/\/[^/]*$/, '')}/${path}`
+      : `${currentOrigin}/checkout/${path}`;
+    
+    console.log(`🔗 API URL (Fallback): ${apiUrl}`);
+    return apiUrl;
   }
 
   // ===== FUNÇÕES ORIGINAIS DO CHECKOUT =====
@@ -932,22 +955,42 @@
 
       const contentType = response.headers.get("content-type") || "";
       const rawBody = await response.text();
-      console.log("Status TriboPay:", response.status);
-      console.log("Resposta bruta TriboPay:", rawBody);
+      
+      console.log(`🔍 Debug API Response:
+        Status: ${response.status}
+        Content-Type: ${contentType}
+        Raw Body Length: ${rawBody?.length || 0}
+        Raw Body Preview: ${rawBody?.substring(0, 200)}...
+        URL: ${apiEndpoint}
+      `);
 
       let data = null;
-      if (rawBody && contentType.includes("application/json")) {
+      
+      // Se não há resposta, verificar se é erro de rede ou servidor
+      if (!rawBody || rawBody.length === 0) {
+        console.error("❌ Servidor não retornou nenhum dado");
+        if (response.status === 0) {
+          throw new Error("Erro de conexão: Verifique sua internet ou se o servidor está ativo.");
+        } else if (response.status >= 500) {
+          throw new Error(`Erro do servidor (${response.status}): Tente novamente em alguns minutos.`);
+        } else {
+          throw new Error(`Gateway não retornou dados (Status: ${response.status}).`);
+        }
+      }
+      
+      // Tentar converter JSON
+      if (contentType.includes("application/json") || rawBody.trim().startsWith('{')) {
         try {
           data = JSON.parse(rawBody);
         } catch (parseErr) {
-          console.error("Falha ao converter resposta em JSON:", parseErr);
-          throw new Error("Retorno inválido do gateway (JSON malformado).");
+          console.error("❌ Falha ao converter resposta em JSON:", parseErr);
+          console.error("Raw response:", rawBody);
+          throw new Error("Resposta do servidor não é um JSON válido.");
         }
-      } else if (rawBody) {
-        console.warn("Resposta não JSON recebida:", contentType);
-        throw new Error(`Gateway respondeu com conteúdo inesperado (${contentType || "sem content-type"}).`);
       } else {
-        throw new Error("Gateway não retornou dados.");
+        console.warn("⚠️ Resposta não é JSON:", contentType);
+        console.warn("Raw response:", rawBody);
+        throw new Error(`Servidor retornou tipo inesperado: ${contentType || "desconhecido"}`);
       }
 
       console.log("Resposta TriboPay:", data);
