@@ -785,6 +785,14 @@
     
     const currentOrigin = window.location.origin;
     const currentPath = window.location.pathname;
+    const isFileProtocol = !currentOrigin || currentOrigin === 'null' || currentOrigin.startsWith('file:');
+    const inCheckoutDir = currentPath?.includes('/checkout/');
+    
+    if (isFileProtocol) {
+      const relativeUrl = `${inCheckoutDir ? '' : 'checkout/'}${sanitizedPath}`;
+      console.log(`🔗 API URL (Arquivo local): ${relativeUrl}`);
+      return relativeUrl;
+    }
     
     console.log(`🔍 Detectando API URL:
       Origin: ${currentOrigin}
@@ -815,6 +823,10 @@
   async function tryApiRequest(path, options = {}) {
     const sanitizedPath = `${path}`.replace(/^\/+/, '');
     const urls = [];
+    const currentOrigin = window.location.origin;
+    const currentPath = window.location.pathname || '';
+    const isFileProtocol = !currentOrigin || currentOrigin === 'null' || currentOrigin.startsWith('file:');
+    const inCheckoutDir = currentPath.includes('/checkout/');
 
     const pushUrl = (candidate) => {
       if (!candidate || urls.includes(candidate)) {
@@ -824,9 +836,19 @@
     };
 
     pushUrl(buildApiUrl(sanitizedPath));
-    pushUrl(`${window.location.origin}/api/${sanitizedPath}`);
-    pushUrl(`${window.location.origin}/checkout/${sanitizedPath}`);
-    pushUrl(`${window.location.origin}/${sanitizedPath}`);
+    if (inCheckoutDir) {
+      pushUrl(sanitizedPath);
+      pushUrl(`./${sanitizedPath}`);
+    } else {
+      pushUrl(`checkout/${sanitizedPath}`);
+      pushUrl(`./checkout/${sanitizedPath}`);
+    }
+
+    if (!isFileProtocol) {
+      pushUrl(`${currentOrigin}/api/${sanitizedPath}`);
+      pushUrl(`${currentOrigin}/checkout/${sanitizedPath}`);
+      pushUrl(`${currentOrigin}/${sanitizedPath}`);
+    }
 
     let lastError = null;
     let lastResponse = null;
@@ -982,8 +1004,8 @@
       };
       
       console.log("🚀 Iniciando requisição para API TriboPay...");
-      const response = await tryApiRequest("api.php", requestOptions);
-      const resolvedEndpoint = response.url || buildApiUrl("api.php");
+      const response = await tryApiRequest("api.js", requestOptions);
+      const resolvedEndpoint = response.url || buildApiUrl("api.js");
       console.log("Endpoint TriboPay API:", resolvedEndpoint);
 
       const contentType = response.headers.get("content-type") || "";
@@ -1004,9 +1026,9 @@
         if (response.status === 0) {
           throw new Error("Erro de conexão: Verifique sua internet ou se o servidor está ativo.");
         } else if (response.status === 405) {
-          throw new Error("Erro 405: API não aceita POST. Verifique se o arquivo api.php existe no servidor.");
+          throw new Error("Erro 405: API não aceita POST. Verifique se o endpoint api.js está funcionando.");
         } else if (response.status === 404) {
-          throw new Error("Erro 404: Arquivo api.php não encontrado no servidor.");
+          throw new Error("Erro 404: Endpoint api.js não encontrado no servidor.");
         } else if (response.status >= 500) {
           throw new Error(`Erro do servidor (${response.status}): Tente novamente em alguns minutos.`);
         } else {
@@ -1031,7 +1053,14 @@
       console.log("Resposta TriboPay:", data);
 
       if (!response.ok || data.error) {
-        const message = data.message || `Erro ao criar transação (HTTP ${response.status}).`;
+        let message = data.message || `Erro ao criar transação (HTTP ${response.status}).`;
+        
+        // Tratamento especial para erro de valor mínimo
+        if (message.includes('valor da compra precisa ser no minimo 5 reais') || message.includes('Valor mínimo')) {
+          message = `❌ Valor mínimo para PIX é R$ 5,00. Adicione mais produtos ao carrinho.`;
+        }
+        
+        console.error('Erro detalhado da API:', data);
         throw new Error(message);
       }
 
@@ -1230,7 +1259,7 @@
       tentativas++;
       
       try {
-        const verificaUrl = buildApiUrl(`verifica.php?id=${encodeURIComponent(transacaoId)}`);
+        const verificaUrl = buildApiUrl(`verifica.js?id=${encodeURIComponent(transacaoId)}`);
         const response = await fetch(verificaUrl);
         const data = await response.json();
         
@@ -1259,7 +1288,7 @@
               transacao: transacaoId,
               ...dadosCliente
             });
-            window.location.href = `pagamento.php?${params.toString()}`;
+            window.location.href = `pagamento.js?${params.toString()}`;
           }, 3000);
           
         } else if (tentativas >= maxTentativas) {

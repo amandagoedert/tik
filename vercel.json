@@ -1,19 +1,80 @@
 {
   "functions": {
-    "api/api.php": {
-      "runtime": "@vercel/php@0.7.0"
+    "api/*.js": {
+      "runtime": "@vercel/node@20"
     },
-    "api/checkout.php": {
-      "runtime": "@vercel/php@0.7.0"
-    },
-    "api/verifica.php": {
-      "runtime": "@vercel/php@0.7.0"
-    },
-    "checkout/api.php": {
-      "runtime": "@vercel/php@0.7.0"
-    },
-    "checkout/verifica.php": {
-      "runtime": "@vercel/php@0.7.0"
+    "checkout/*.js": {
+      "runtime": "@vercel/node@20"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/api.php",
+      "destination": "/api/api.js"
+    },
+    {
+      "source": "/checkout/api.php",
+      "destination": "/api/api.js"
+    },
+    {
+      "source": "/api/verifica.php",
+      "destination": "/api/verifica.js"
+    },
+    {
+      "source": "/checkout/verifica.php",
+      "destination": "/api/verifica.js"
+    },
+    {
+      "source": "/api/webhook.php",
+      "destination": "/api/webhook.js"
+    },
+    {
+      "source": "/checkout/webhook.php",
+      "destination": "/api/webhook.js"
+    },
+    {
+      "source": "/checkout/diagnostico.php",
+      "destination": "/api/diagnostico.js"
+    },
+    {
+      "source": "/checkout/teste_config.php",
+      "destination": "/api/teste_config.js"
+    },
+    {
+      "source": "/checkout/teste_transacao.php",
+      "destination": "/api/teste_transacao.js"
+    },
+    {
+      "source": "/api/test.php",
+      "destination": "/api/test.js"
+    },
+    {
+      "source": "/api/checkout.php",
+      "destination": "/api/checkout.js"
+    },
+    {
+      "source": "/checkout/debug_api.php",
+      "destination": "/api/debug_api.js"
+    },
+    {
+      "source": "/checkout/debug_deploy.php",
+      "destination": "/api/debug_deploy.js"
+    },
+    {
+      "source": "/checkout/teste_verifica.php",
+      "destination": "/api/teste_verifica.js"
+    },
+    {
+      "source": "/checkout/teste_gateway.php",
+      "destination": "/api/teste_gateway.js"
+    },
+    {
+      "source": "/checkout/pagamento.php",
+      "destination": "/api/pagamento.js"
+    },
+    {
+      "source": "/checkout/teste_simples.php",
+      "destination": "/api/test.js"
+    }
+  ]
 }

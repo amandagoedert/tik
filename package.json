@@ -1,0 +1,27 @@
+{
+  "name": "tikt-pix-api",
+  "version": "1.0.0",
+  "description": "API PIX TriboPay para TikTok Shop",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch api/api.js",
+    "start": "node api/api.js",
+    "test": "node test/test-api.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "pix",
+    "tribopay",
+    "api",
+    "payment",
+    "nodejs"
+  ],
+  "author": "Amanda Goedert",
+  "license": "MIT"
+}
